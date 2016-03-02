@@ -8,8 +8,8 @@
 
 ###About me
 
-I was born in Cabo Verde, but grew up in Portugal from an early age. I attended university in my country, prior to coming to China, and I majored in Computer Science.
-I'm a decent programmer already, and learn new things fairly quickly. I love to cook and have _A LOT_ of hobbies :laughing:
+I was born in Cabo Verde, but grew up in Portugal from an early age.
+I'm a decent programmer, and learn new things fairly quickly. 
 
 ---
 ##Skills & Interests
