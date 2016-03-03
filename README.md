@@ -30,3 +30,25 @@ I'm a decent programmer, and learn new things fairly quickly.
 By the end of this course I expect to be able to create my own simple 2D game engine, with all the parts it involves, _Graphics & Rendering_,
 _Audio & Sound_, and basic _AI_ such as steering and pathfinding behaviour.
 
+---
+##Code Samples
+
+####Python
+```python
+print ("Hello World!")
+```
+####__C#__
+```c#
+  //Unity standard
+  void Start(){
+    print("Hello World!");
+  }
+```
+
+####Javascript
+```javascript
+  function HelloWorld(){
+    document.write("Hello World!");
+  }
+```
+
