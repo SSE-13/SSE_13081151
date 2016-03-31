@@ -18,20 +18,26 @@ module game {
             super();
             var grid = new astar.Grid(NUM_COLS, NUM_ROWS);
             this.grid = grid;
+            grid.setWalkable(0, 3, false);
+            
+            grid.setWalkable(1, 0, false);
+            grid.setWalkable(1, 1, false);            
+            grid.setWalkable(1, 3, false);
+            
+            grid.setWalkable(2, 3, false);
+            grid.setWalkable(2, 5, false);
+            
+            grid.setWalkable(3, 5, false);
+            grid.setWalkable(3, 6, false);
+            grid.setWalkable(4, 5, false);
+            
             grid.setWalkable(5, 1, false);
             grid.setWalkable(5, 2, false);
             grid.setWalkable(5, 4, false);
             grid.setWalkable(5, 3, false);
             grid.setWalkable(5, 5, false);
-            grid.setWalkable(2, 5, false);
-            grid.setWalkable(3, 6, false);
-            grid.setWalkable(1, 0, false);
-            grid.setWalkable(1, 1, false);
-            grid.setWalkable(0, 3, false);
-            grid.setWalkable(1, 3, false);
-            grid.setWalkable(2, 3, false);
-            grid.setWalkable(4, 5, false);
-            grid.setWalkable(3, 5, false);
+            
+            
             
 
         }
@@ -43,8 +49,8 @@ module game {
                 for (var j = 0; j < NUM_ROWS; j++) {
                    
                     if(!this.grid.getNode(i,j).walkable){
-                        context.fillRect(i * GRID_PIXEL_WIDTH, (j-1) * GRID_PIXEL_HEIGHT, GRID_PIXEL_WIDTH, GRID_PIXEL_HEIGHT);
-                        context.fillRect(i * GRID_PIXEL_WIDTH, j * GRID_PIXEL_HEIGHT, GRID_PIXEL_WIDTH, GRID_PIXEL_HEIGHT);
+                        context.fillRect((i+1) * GRID_PIXEL_WIDTH, (j+1) * GRID_PIXEL_HEIGHT, GRID_PIXEL_WIDTH, GRID_PIXEL_HEIGHT);
+                        //context.fillRect(i * GRID_PIXEL_WIDTH, j * GRID_PIXEL_HEIGHT, GRID_PIXEL_WIDTH, GRID_PIXEL_HEIGHT);
                         context.fillStyle = '#000000';
                     }
                     else {
@@ -81,7 +87,7 @@ module game {
         public movestep = 1;
         public run(grid) {
             grid.setStartNode(0, 0);
-            grid.setEndNode(7, 11);
+            grid.setEndNode(11, 11);
             this.FindPath = new astar.AStar();
             this.FindPath.setHeurisitic(this.FindPath.diagonal);
             var result = this.FindPath.findPath(grid);
@@ -105,15 +111,6 @@ module game {
         public onTicker(duringTime) {
             if(this.x < NUM_ROWS * GRID_PIXEL_WIDTH && this.y < NUM_COLS * GRID_PIXEL_HEIGHT){
                 if(this.movestep < this.FindPath._path.length-1){
-                    // if(this.vx*duringTime < this.dx[this.movestep]*GRID_PIXEL_WIDTH){
-                    //     this.x += this.vx*duringTime;
-                    // }                 
-                    // if(this.vy*duringTime < this.dy[this.movestep]*GRID_PIXEL_HEIGHT){
-                    //     this.y += this.vy*duringTime;
-                    // }
-                    // if(this.x >= this.Dx[this.movestep]*GRID_PIXEL_WIDTH && this.y >= this.Dy[this.movestep]*GRID_PIXEL_HEIGHT){
-                    //     this.movestep++;
-                    // }
                    this.x += this.dx[this.movestep]*GRID_PIXEL_WIDTH;
                    this.y += this.dy[this.movestep]*GRID_PIXEL_HEIGHT;
                    this.movestep++;
