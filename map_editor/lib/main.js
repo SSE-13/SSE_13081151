@@ -67,7 +67,7 @@ function OnLoad(displayObject) {
         var cols = mapData[0].length;
         for (var col = 0; col < cols; col++) {
             for (var row = 0; row < rows; row++) {
-                editor.children[rows * row + col].setWalkable(mapData[row][col]);
+                editor.children[cols * col + row].setWalkable(mapData[row][col]);
             }
         }
         console.log("Map loaded");
