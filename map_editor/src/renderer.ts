@@ -71,7 +71,7 @@ module render {
     export class DisplayObjectContainer extends DisplayObject {
 
 
-        children: Array<DisplayObject>
+        public children: Array<DisplayObject>
 
         constructor() {
             super();
@@ -82,7 +82,7 @@ module render {
             this.children.push(child);
             child.parent = this;
         }
-
+        
         render(context) {
             for (var i = 0; i < this.children.length; i++) {
                 var child = this.children[i];
