@@ -25,7 +25,7 @@ module data {
                       var _Layer = JSON.parse(m_jsonfile.responseText);
                       Storage._instance.m_layer0 = _Layer.layer0;
                       Storage._instance.m_layer1 = _Layer.layer1;
-                      
+    
                       callback();
                
                 }

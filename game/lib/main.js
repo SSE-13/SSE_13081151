@@ -1,11 +1,11 @@
-function CreateMap() {
+function CreateMap(layerData) {
     var world = new editor.WorldMap();
-    var rows = m_layer1.length;
-    var cols = m_layer1[0].length;
-    for (var row = 0; row < rows; row++) {
-        for (var col = 0; col < cols; col++) {
+    var rows = layerData.length;
+    var cols = layerData[0].length;
+    for (var col = 0; col < cols; col++) {
+        for (var row = 0; row < cols; row++) {
             var tile = new editor.Tile();
-            tile.setWalkable(m_layer1[row][col]);
+            tile.setWalkable(layerData[row][col]);
             tile.x = col * editor.GRID_PIXEL_WIDTH;
             tile.y = row * editor.GRID_PIXEL_HEIGHT;
             tile.ownedCol = col;
@@ -16,19 +16,20 @@ function CreateMap() {
             eventCore.register(tile, events.displayObjectRectHitTest, onTileClick);
         }
     }
+    return world;
 }
 function onTileClick(tile) {
     console.log(tile);
 }
 var storage = data.Storage.getInstance();
-var m_layer0;
-var m_layer1;
 var mapEditor;
 var onLoadSuccess = function () {
-    m_layer0 = storage.m_layer0;
-    m_layer1 = storage.m_layer1;
-    mapEditor = CreateMap();
+    mapEditor = CreateMap(storage.m_layer0);
+    var layer1 = CreateMap(storage.m_layer1);
     stage.addChild(mapEditor);
+    stage.addChild(layer1);
+    layer1.x = 100;
+    layer1.y = 210;
 };
 storage.GetJson(onLoadSuccess);
 var renderCore = new render.RenderCore();
