@@ -69,7 +69,8 @@ var m_buttonSave=new render.Bitmap();
 m_buttonSave.width = 50;
 m_buttonSave.height = 50;
 m_buttonSave.source="Save.png";
-m_buttonSave.y=200;
+m_buttonSave.x = 250;
+m_buttonSave.y=0;
 var Save = (localPoint:math.Point,displayObject:render.DisplayObject) =>{
     if(localPoint.x>=0&&localPoint.x<=m_buttonSave.width&&localPoint.y>=0&&localPoint.y<=m_buttonSave.height)
     return true;
@@ -84,8 +85,8 @@ var m_buttonUndo=new render.Bitmap();
 m_buttonUndo.width = 50;
 m_buttonUndo.height = 50;
 m_buttonUndo.source="Cannel.png";
-m_buttonUndo.x =150;
-m_buttonUndo.y=200;
+m_buttonUndo.x =320;
+m_buttonUndo.y=0;
 var Cannel = (localPoint:math.Point,displayObject:render.DisplayObject) =>{
     if(localPoint.x>=0&&localPoint.x<=m_buttonUndo.width&&localPoint.y>=0&&localPoint.y<=m_buttonUndo.height)
     return true;
