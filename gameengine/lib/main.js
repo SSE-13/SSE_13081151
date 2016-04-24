@@ -99,6 +99,8 @@ function StatusBUr(tile) {
     var m_CanPassOrNot = new ui.Button();
     Container.x = 250;
     Container.y = 50;
+    //var m_bitmap=new render.Bitmap();
+    //m_bitmap.source = "Save.png";
     var X = tile.ownedRow + 1;
     var Y = tile.ownedCol + 1;
     var m_postion = new ui.Button();
@@ -107,11 +109,13 @@ function StatusBUr(tile) {
     m_postion.x = 10;
     m_postion.y = 10;
     m_postion.text = X + ' 行 ' + Y + ' 列 ';
+    //m_postion.source = m_bitmap;
     Container.addChild(m_postion);
     m_CanPassOrNot.width = 100;
     m_CanPassOrNot.height = 30;
     m_CanPassOrNot.x = 10;
     m_CanPassOrNot.y = 50;
+    // m_CanPassOrNot.source = m_bitmap;
     var m_Background = new render.Rect();
     m_Background.width = 50;
     m_Background.height = 50;
