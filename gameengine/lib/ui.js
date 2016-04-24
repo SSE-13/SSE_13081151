@@ -12,6 +12,7 @@ var ui;
             var _this = this;
             _super.call(this);
             this._text = "label";
+            //this.source = new render.Bitmap();
             this.background = new render.Rect();
             this.background.width = this.width;
             this.background.height = this.height;
@@ -21,6 +22,7 @@ var ui;
             this.label.textAlign = "center";
             this.label.text = this.text;
             this.addChild(this.background);
+            //  this.addChild(this.source);
             this.addChild(this.label);
             eventCore.register(this, events.displayObjectRectHitTest, function () {
                 if (_this.onClick) {
