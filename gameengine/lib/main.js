@@ -125,6 +125,9 @@ function StatusBUr(tile) {
         m_CanPassOrNot.text = "不可走";
         m_Background.color = "#0000FF";
     }
+    m_CanPassOrNot.onClick = function () {
+        onTileClick(tile);
+    };
     Container.addChild(m_CanPassOrNot);
     Container.addChild(m_Background);
     return Container;

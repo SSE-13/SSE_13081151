@@ -96,7 +96,7 @@ function onCannelClick() {
 }
 
 
-function onTileClick(tile: editor.Tile) {
+function onTileClick(tile) {
      console.log(tile.ownedRow+" "+tile.ownedCol+" "+mapData[tile.ownedRow][tile.ownedCol]); 
      m_Undo[0][m_Undolength] = tile.ownedRow;
      m_Undo[1][m_Undolength] = tile.ownedCol;
@@ -111,7 +111,7 @@ function onTileClick(tile: editor.Tile) {
     m_RecordTile = tile;
     console.log(tile);
 }
-function StatusBUr(tile: editor.Tile) {
+function StatusBUr(tile) {
     var Container = new render.DisplayObjectContainer();
     var m_CanPassOrNot = new ui.Button();
     Container.x = 250;
@@ -145,6 +145,9 @@ function StatusBUr(tile: editor.Tile) {
             m_CanPassOrNot.text = "不可走";
             m_Background.color = "#0000FF" ;
      }
+      m_CanPassOrNot.onClick = ()=> {
+        onTileClick(tile);
+    }
     Container.addChild(m_CanPassOrNot);
     Container.addChild(m_Background);
     
