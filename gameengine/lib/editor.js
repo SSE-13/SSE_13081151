@@ -36,15 +36,7 @@ var editor;
     var ControlPanel = (function (_super) {
         __extends(ControlPanel, _super);
         function ControlPanel() {
-            _super.call(this);
-            var button = new ui.Button();
-            button.text = "Hello";
-            button.width = 100;
-            button.height = 50;
-            this.addChild(button);
-            button.onClick = function () {
-                alert(111);
-            };
+            _super.apply(this, arguments);
         }
         return ControlPanel;
     }(render.DisplayObjectContainer));

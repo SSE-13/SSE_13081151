@@ -32,7 +32,7 @@ module ui {
             this.background.height = value;
         }
 
-
+       // public source: render.Bitmap;
         private background: render.Rect;
         private label: render.TextField;
         private _text: string = "label";
@@ -42,6 +42,7 @@ module ui {
         constructor() {
 
             super();
+            //this.source = new render.Bitmap();
             this.background = new render.Rect();
             this.background.width = this.width;
             this.background.height = this.height;
@@ -50,7 +51,9 @@ module ui {
             this.label.height = this.height;
             this.label.textAlign = "center";
             this.label.text = this.text;
+          
             this.addChild(this.background);
+            //  this.addChild(this.source);
             this.addChild(this.label);
 
             eventCore.register(this, events.displayObjectRectHitTest, () => {
