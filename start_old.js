@@ -28,20 +28,17 @@ if (!root) {
 }
 
 if (root.indexOf('map_editor') != -1) {
-    openElectron('map_editor');
-}
-else if ( root.indexOf("gameengine") != -1){
-    openElectron('gameengine');
+    openElectron();
 }
 else {
     openExpressServer();
 }
 
-function openElectron(projectPath) {
+function openElectron() {
     var electronPath = path.join(getElectronFolder(), getElectronFileName());
     //检测 electron 是否存在
     if (fs.existsSync(electronPath)) {
-        var electron = createChildProcess(electronPath, [projectPath], function(data) {
+        var electron = createChildProcess(electronPath, ["map_editor"], function(data) {
         }, function() {
 
         });
