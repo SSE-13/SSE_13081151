@@ -5,7 +5,9 @@ function CreateMap(layerData) {
     for (var col = 0; col < cols; col++) {
         for (var row = 0; row < cols; row++) {
             var tile = new editor.Tile();
-            tile.setWalkable(layerData[row][col]);
+            var data = layerData[row][col];
+            var walkable = data > 0 ? 1 : 0;
+            tile.setWalkable(walkable);
             tile.x = col * editor.GRID_PIXEL_WIDTH;
             tile.y = row * editor.GRID_PIXEL_HEIGHT;
             tile.ownedCol = col;
