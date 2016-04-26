@@ -8,6 +8,7 @@
 
 <body>
     <h1>Game Map Editor</h1> 
+    <h2>Map Area</h2> 
     <form>
         <div class="map-properties">
             <label for="width">Width: </label>
@@ -23,7 +24,7 @@
         </div>
     </form>
     
-    <canvas id="game" width="800" height="600">
+    <canvas id="game" width="800" height="400">
         <canvas>
             <script src="math.js"></script>
             <script src="data.js"></script>
@@ -35,7 +36,24 @@
             <script src="game.js"></script>
         </canvas>
     </canvas>
-      
+    <h2>Tileset </h2>
+    <form>
+        <div class="tileset">
+            <label for="tileWidth">Tile Width: </label>
+            <input type="number" min="16" value="32" max="72" id="tile-width" required>
+            
+            <label for="height">Tile Height: </label>
+            <input type="number" min="16" value="32" max="72" id="tile-height" required>
+            
+            <label for="name"> Tileset: </label>
+            <select type="text" id="map-name" required>
+                <option value="tileset">Environment</option>
+                <option value="item01">Items Set 1</option>
+                <option value="items02">Items Set 2</option>
+            </select>
+            <button onclick="onLoadTileset()" type="button">Load Tileset</button>
+        </div>
+    </form>
     
         
 </body>

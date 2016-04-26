@@ -6,6 +6,8 @@ var m_RecordTile = new editor.Tile;
 for (var i = 0; i < 3; i++) {
     m_Undo[i] = new Array();
 }
+//================================================================= Initialization =================================================================//
+//================================================================= Read Map File ==================================================================//
 function readFile() {
     var map_path = __dirname + "/map.json";
     var content = fs.readFileSync(map_path, "utf-8");
@@ -13,12 +15,14 @@ function readFile() {
     var mapData = obj.map;
     return mapData;
 }
+//================================================================= Save Map File ==================================================================//
 function writeFile() {
     console.log(mapData);
     var map_path = __dirname + "/map.json";
     var json = "{\"map\":" + JSON.stringify(mapData) + "}";
     fs.writeFileSync(map_path, json, "utf-8");
 }
+//================================================================= Undo Operation ==================================================================//
 function UndoTile() {
     if (m_Undolength <= 0) {
         alert("Ended");
@@ -31,6 +35,26 @@ function UndoTile() {
         m_Undolength--;
         m_RecordTile.setWalkable(mapData[new_row][new_col]);
     }
+}
+//================================================================= Create New Map ==================================================================//
+function createNewMap(width, height, tileWidth, tileHeight) {
+    var map = new editor.WorldMap();
+    for (var col = 0; col < width; col++) {
+        for (var row = 0; row < height; row++) {
+            var tile = new editor.imgTile();
+            tile.setWalkable(true);
+            tile.source = "assets/emptyTile.png";
+            tile.x = col * tileWidth;
+            tile.y = row * tileHeight;
+            tile.ownedCol = col;
+            tile.ownedRow = row;
+            tile.width = tileWidth;
+            tile.height = tileHeight;
+            map.addChild(tile);
+            eventCore.register(tile, events.displayObjectRectHitTest, onMapTileClick);
+        }
+    }
+    return map;
 }
 function createMapEditor() {
     var world = new editor.WorldMap();
