@@ -27,20 +27,56 @@ module editor {
         }
     }
 
+    export class imgTile extends render.Bitmap
+    {
+        public ownedRow: number;
+        public ownedCol: number;
+        private walkable: boolean = true;
+        
+        constructor()
+        {
+            super();
+        }
+        
+        public setWalkable(value) {
+            this.walkable = value;
+        }
+        
+        public setImage(value)
+        {
+            
+        }
+        
+        public getWalkable()
+        {
+            return this.walkable;    
+        }
+    }
 
     export class Tile extends render.Rect {
 
 
         public ownedRow: number;
         public ownedCol: number;
-
+        private walkable: boolean = true;
 
         constructor() {
             super();
         }
 
         public setWalkable(value) {
+            this.walkable = value;
             this.color = value ? "#0000FF" : "#FF0000";
+        }
+        
+        public setImage(value)
+        {
+            
+        }
+        
+        public getWalkable()
+        {
+            return this.walkable;    
         }
     }
     

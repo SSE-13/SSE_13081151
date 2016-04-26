@@ -65,18 +65,23 @@ function createMapEditor() {
     return world;
 
 }
+
 var m_buttonSave=new render.Bitmap();
+
 m_buttonSave.width = 50;
 m_buttonSave.height = 50;
 m_buttonSave.source="Save.png";
 m_buttonSave.x = 250;
 m_buttonSave.y=0;
+
 var Save = (localPoint:math.Point,displayObject:render.DisplayObject) =>{
     if(localPoint.x>=0&&localPoint.x<=m_buttonSave.width&&localPoint.y>=0&&localPoint.y<=m_buttonSave.height)
     return true;
 }
+
 function onSaveClick() {
     writeFile(); 
+   
     console.log("Save");   
 }
 
@@ -91,9 +96,9 @@ var Cannel = (localPoint:math.Point,displayObject:render.DisplayObject) =>{
     if(localPoint.x>=0&&localPoint.x<=m_buttonUndo.width&&localPoint.y>=0&&localPoint.y<=m_buttonUndo.height)
     return true;
 }
-function onCannelClick() {
+function onCancelClick() {
     UndoTile();
-    console.log("Cannel");   
+    console.log("Cancel");   
 }
 
 
@@ -112,6 +117,16 @@ function onTileClick(tile) {
     m_RecordTile = tile;
     console.log(tile);
 }
+
+function onCreateMap()
+{
+    var width = parseInt((<HTMLInputElement>document.getElementById("map-width")).value);
+    var height = parseInt((<HTMLInputElement>document.getElementById("map-height")).value);
+    var name = (<HTMLInputElement>document.getElementById("map-name")).value;
+    
+    console.log(name);
+}
+
 function StatusBUr(tile) {
     var Container = new render.DisplayObjectContainer();
     var m_CanPassOrNot = new ui.Button();
@@ -155,6 +170,8 @@ function StatusBUr(tile) {
     Container.addChild(m_Background);
     return Container;
 }
+
+
 var storage = data.Storage.getInstance();
 storage.readFile();
 var mapData = storage.mapData;
@@ -175,5 +192,5 @@ stage.addChild(m_buttonUndo);
 //stage.addChild(StatusBUr(m_RecordTile));
 renderCore.start(stage,["Save.png","Cannel.png"]);
 eventCore.register(m_buttonSave, Save, onSaveClick);
-eventCore.register(m_buttonUndo, Cannel, onCannelClick);
+eventCore.register(m_buttonUndo, Cannel, onCancelClick);
 renderCore.start(stage);

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html>
 
 <head>
@@ -7,17 +7,22 @@
 </head>
 
 <body>
-    <h1>Hello World!</h1> We are using node
-    <script>
-        document.write(process.versions.node)
-    </script>, Chrome
-    <script>
-        document.write(process.versions.chrome)
-    </script>, and Electron
-    <script>
-        document.write(process.versions.electron)
-    </script>.
-
+    <h1>Game Map Editor</h1> 
+    <form>
+        <div class="map-properties">
+            <label for="width">Width: </label>
+            <input type="number" min="5" value="5" max="50" id="map-width" required>
+            
+            <label for="height"> Height: </label>
+            <input type="number" min="5" value="5" max="50" id="map-height" required>
+            
+            <label for="name"> Map Name: </label>
+            <input type="text" id="map-name" value="map" required>
+            
+            <button onclick="onCreateMap()" type="button">New Map</button>
+        </div>
+    </form>
+    
     <canvas id="game" width="800" height="600">
         <canvas>
             <script src="math.js"></script>
@@ -27,8 +32,12 @@
             <script src="ui.js"></script>
             <script src="editor.js"></script>
             <script src="main.js"></script>
-            <form>
-</form>
+            <script src="game.js"></script>
+        </canvas>
+    </canvas>
+      
+    
+        
 </body>
 
 </html>

@@ -76,9 +76,9 @@ var Cannel = function (localPoint, displayObject) {
     if (localPoint.x >= 0 && localPoint.x <= m_buttonUndo.width && localPoint.y >= 0 && localPoint.y <= m_buttonUndo.height)
         return true;
 };
-function onCannelClick() {
+function onCancelClick() {
     UndoTile();
-    console.log("Cannel");
+    console.log("Cancel");
 }
 function onTileClick(tile) {
     console.log(tile.ownedRow + " " + tile.ownedCol + " " + mapData[tile.ownedRow][tile.ownedCol]);
@@ -94,6 +94,12 @@ function onTileClick(tile) {
     stage.addChild(StatusBUr(tile));
     m_RecordTile = tile;
     console.log(tile);
+}
+function onCreateMap() {
+    var width = parseInt(document.getElementById("map-width").value);
+    var height = parseInt(document.getElementById("map-height").value);
+    var name = document.getElementById("map-name").value;
+    console.log(name);
 }
 function StatusBUr(tile) {
     var Container = new render.DisplayObjectContainer();
@@ -154,5 +160,5 @@ stage.addChild(m_buttonUndo);
 //stage.addChild(StatusBUr(m_RecordTile));
 renderCore.start(stage, ["Save.png", "Cannel.png"]);
 eventCore.register(m_buttonSave, Save, onSaveClick);
-eventCore.register(m_buttonUndo, Cannel, onCannelClick);
+eventCore.register(m_buttonUndo, Cannel, onCancelClick);
 renderCore.start(stage);

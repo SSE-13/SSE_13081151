@@ -22,13 +22,37 @@ var editor;
         return WorldMap;
     }(render.DisplayObjectContainer));
     editor.WorldMap = WorldMap;
+    var imgTile = (function (_super) {
+        __extends(imgTile, _super);
+        function imgTile() {
+            _super.call(this);
+            this.walkable = true;
+        }
+        imgTile.prototype.setWalkable = function (value) {
+            this.walkable = value;
+        };
+        imgTile.prototype.setImage = function (value) {
+        };
+        imgTile.prototype.getWalkable = function () {
+            return this.walkable;
+        };
+        return imgTile;
+    }(render.Bitmap));
+    editor.imgTile = imgTile;
     var Tile = (function (_super) {
         __extends(Tile, _super);
         function Tile() {
             _super.call(this);
+            this.walkable = true;
         }
         Tile.prototype.setWalkable = function (value) {
+            this.walkable = value;
             this.color = value ? "#0000FF" : "#FF0000";
+        };
+        Tile.prototype.setImage = function (value) {
+        };
+        Tile.prototype.getWalkable = function () {
+            return this.walkable;
         };
         return Tile;
     }(render.Rect));
