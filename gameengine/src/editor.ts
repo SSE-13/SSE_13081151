@@ -47,6 +47,7 @@ module editor {
             this.source = value;
         }
         
+        
         public getImage()
         {
             return this.source;

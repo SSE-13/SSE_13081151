@@ -5,11 +5,22 @@ import * as fs from 'fs';
 const ASSETS_PATH = __dirname + "\\assets\\";
 const SAVE_BTN_PATH = ASSETS_PATH + "Save.png";
 const CANCEL_BTN_PATH = ASSETS_PATH + "Cancel.png";
-const EMPTY_TILE_PATH = ASSETS_PATH + "emptyTile.png";
+const EMPTY_TILE_PATH = ASSETS_PATH + "0.png";
+const WATER_TILE_PATH = ASSETS_PATH + "1.png";
+const CRATE_TILE_PATH = ASSETS_PATH + "2.png";
+const FENCE_F_TILE_PATH = ASSETS_PATH + "3.png";
+const FENCE_TL_TILE_PATH = ASSETS_PATH + "4.png";
+const FENCE_TR_TILE_PATH = ASSETS_PATH + "5.png";
+const FENCE_BL_TILE_PATH = ASSETS_PATH + "6.png";
+const FENCE_BR_TILE_PATH = ASSETS_PATH + "7.png";
+const BRIDGE_TILE_PATH = ASSETS_PATH + "8.png";
+const GRASS_TILE_PATH = ASSETS_PATH + "9.png";
 
 var m_Undolength =0;
 var m_Undo = new Array(4);
-var m_CurrentTile = 0;
+var m_CurrentTile = 9;
+var m_CurrentLayer = 0;
+
 //var m_RecordTile =  new editor.Tile;
 
 for(var i=0;i<3;i++)
@@ -32,8 +43,7 @@ var m_UndoBtn;
 var m_EventCore = events.EventCore.getInstance();
 m_EventCore.init();
 
-var m_Map = new data.Map(10, 8,"map");
-var m_MapData;
+var m_Map = data.Storage.getInstance();
 
  //m_MapEditor = createMapEditor();
 onCreateMap();
@@ -60,7 +70,7 @@ function Start()
     
     m_RenderCore = new render.RenderCore();
     m_RenderCore.start(m_Stage);
-    m_RenderCore.start(m_Stage, [SAVE_BTN_PATH, EMPTY_TILE_PATH, CANCEL_BTN_PATH]);
+    m_RenderCore.start(m_Stage, [SAVE_BTN_PATH, EMPTY_TILE_PATH, CANCEL_BTN_PATH, BRIDGE_TILE_PATH, CRATE_TILE_PATH, FENCE_BL_TILE_PATH, FENCE_BR_TILE_PATH, FENCE_F_TILE_PATH, FENCE_TL_TILE_PATH, FENCE_TR_TILE_PATH, GRASS_TILE_PATH]);
 }
 
 
@@ -109,14 +119,14 @@ function UndoTile() {
     else{
         var new_row=m_Undo[0][m_Undolength-1];
         var new_col=m_Undo[1][m_Undolength-1];
-        m_MapData[new_row][new_col]= m_Undo[2][m_Undolength-1];
+        //m[new_row][new_col]= m_Undo[2][m_Undolength-1];
         m_Undolength--;
         //m_RecordTile.setWalkable(m_MapData[new_row][new_col]);
    }
 }
 
 //================================================================= Create New Map ==================================================================//
-function createNewMap(width, height, tileWidth, tileHeight)
+function createNewMap(width, height, tileWidth, tileHeight, layerID)
 {
     var map = new editor.WorldMap();
     
@@ -124,6 +134,7 @@ function createNewMap(width, height, tileWidth, tileHeight)
     {
         for(var row = 0; row < height; row++)
         {
+            m_Map.layers[layerID][col][row] = 0;
             var tile = new editor.Tile();
             tile.setWalkable(true);
             tile.source = EMPTY_TILE_PATH;
@@ -167,7 +178,9 @@ function onMapTileClick(tile)
 {
     //m_MapData[tile.ownedRow][tile.ownedCol] ++;
     //m_MapData[tile.ownedRow][tile.ownedCol] %= 2;
-    console.log(m_MapData[tile.ownedRow][tile.ownedCol]);
+    m_Map.layers[m_CurrentLayer][tile.ownedRow][tile.ownedCol] = m_CurrentTile;
+    tile.source = ASSETS_PATH + m_CurrentTile + ".png";
+    console.log(m_Map.layers[0][tile.ownedRow][tile.ownedCol]);
     
  
 }
@@ -203,7 +216,7 @@ function onCreateMap()
     var tileW = parseInt((<HTMLInputElement>document.getElementById("tile-width")).value);
     var tileH = parseInt((<HTMLInputElement>document.getElementById("tile-height")).value);
     
-    m_MapEditor = createNewMap(mapW, mapH, tileW, tileH);
+    m_MapEditor = createNewMap(mapW, mapH, tileW, tileH, m_CurrentLayer);
     
     Start();
 }

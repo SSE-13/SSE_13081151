@@ -1,64 +1,50 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 var fs = require("fs");
 var data;
 (function (data) {
     data.NUM_LAYERS = 3;
     data.ASSETS_PATH = __dirname + "\\assets\\";
     data.MAP_EXTENSION = ".json";
-    var Map = (function () {
-        function Map(height, width, name) {
-            //private static _instance: Map;
-            this.DEFAULT_WIDTH = 5;
-            this.DEFAULT_HEIGHT = 5;
-            this.height = height ? height : this.DEFAULT_HEIGHT;
-            this.width = width ? width : this.DEFAULT_WIDTH;
-            this.name = name ? name : "map";
-            //this.layers = new Array(NUM_LAYERS); 
-            for (var col = 0; col < width; col++) {
-                mapData =
-                ;
-                for (var row = 0; row < height; row++) {
+    var Storage = (function () {
+        function Storage(height, width, name) {
+            this.height = height;
+            this.width = width;
+            this.name = name;
+            this.layers = new Array(data.NUM_LAYERS);
+            for (var i = 0; i < data.NUM_LAYERS; i++) {
+                this.layers[i] = new Array(width);
+                for (var col = 0; col < width; col++) {
+                    this.layers[i][col] = new Array(height);
+                    for (var row = 0; row < height; row++) {
+                        this.layers[i][col][row] = 0;
+                    }
                 }
             }
         }
-        Map.prototype.readFile = function () {
+        Storage.getInstance = function () {
+            if (Storage._instance == null) {
+                Storage._instance = new Storage(this.DEFAULT_WIDTH, this.DEFAULT_HEIGHT, "map");
+            }
+            return Storage._instance;
+        };
+        Storage.prototype.readFile = function () {
             var map_path = data.ASSETS_PATH + this.name + data.MAP_EXTENSION;
             var content = fs.readFileSync(map_path, "utf-8");
             var obj = JSON.parse(content);
-            this.mapData = obj.map;
-            console.log(obj.height);
+            this.layers[0] = obj.layer0;
+            this.layers[1] = obj.layer1;
+            this.layers[2] = obj.layer2;
+            this.height = obj.height;
+            this.width = obj.width;
         };
-        Map.prototype.saveFile = function () {
-            console.log(this.mapData);
-            var map_path = data.ASSETS_PATH + this.name + data.MAP_EXTENSION;
-            var json = "{\"map\":" + JSON.stringify(this.mapData) + "}";
-            fs.writeFileSync(map_path, json, "utf-8");
+        Storage.prototype.saveFile = function () {
+            console.log(this.layers);
+            //var map_path = ASSETS_PATH + this.name + MAP_EXTENSION;
+            //var json="{\"map\":"+JSON.stringify(this.mapData)+"}";
+            //fs.writeFileSync(map_path,json,"utf-8");
         };
-        return Map;
+        Storage.DEFAULT_WIDTH = 5;
+        Storage.DEFAULT_HEIGHT = 5;
+        return Storage;
     }());
-    data.Map = Map;
-    var Tileset = (function (_super) {
-        __extends(Tileset, _super);
-        function Tileset() {
-            _super.call(this);
-        }
-        Tileset.prototype.setTileset = function (width, height, tileWidth, tileHeight, name, source) {
-            this._height = height;
-            this._width = width;
-            this.tileHeight = tileHeight;
-            this.tileWidth = tileWidth;
-            this.source = source;
-            this.name = name;
-            this.numTilesInRow = Math.floor(width / tileWidth);
-        };
-        Tileset.prototype.getTile = function (col, row) {
-            return;
-        };
-        return Tileset;
-    }(render.Bitmap));
-    data.Tileset = Tileset;
+    data.Storage = Storage;
 })(data || (data = {}));
