@@ -52,21 +52,20 @@ function onTileClick(tile: editor.Tile) {
 
 var storage = data.Storage.getInstance();
 var m_Player=new render.Bitmap();
+m_Player.source="bridge.png";
 
 var onLoadSuccess=() =>{
     var layer0 = CreateBackgound(storage.m_layer0);
     var layer1 = CreateLayer1(storage.m_layer1);
     stage.addChild(layer0);
     stage.addChild(layer1);
- //   body.run(layer1.;
+    stage.addChild(m_Player);
 }
 storage.GetJson(onLoadSuccess);
 
 var renderCore = new render.RenderCore();
 var eventCore = events.EventCore.getInstance();
 eventCore.init();
-
-//var body = new game.BoyBody(m_Player);
 
 
 var stage = new render.DisplayObjectContainer();
