@@ -9,6 +9,7 @@ const EMPTY_TILE_PATH = ASSETS_PATH + "emptyTile.png";
 
 var m_Undolength =0;
 var m_Undo = new Array(4);
+var m_CurrentTile = 0;
 //var m_RecordTile =  new editor.Tile;
 
 for(var i=0;i<3;i++)
@@ -30,17 +31,12 @@ var m_UndoBtn;
 //Editor Elements
 var m_EventCore = events.EventCore.getInstance();
 m_EventCore.init();
-m_EventCore.register(m_SaveBtn, HitTest, onSaveClick);
-m_EventCore.register(m_UndoBtn, HitTest, onCancelClick);
 
-
-var m_Storage = data.Storage.getInstance();
-m_Storage.readFile();
-
-var m_MapData = m_Storage.mapData;
+var m_Map = new data.Map(10, 8,"map");
+var m_MapData;
 
  //m_MapEditor = createMapEditor();
-
+onCreateMap();
 Start();
 
 //==============================================================================================================================================//
@@ -86,6 +82,9 @@ function InitUI()
     m_UndoBtn.source = CANCEL_BTN_PATH;
     m_UndoBtn.x = 350;
     m_UndoBtn.y = 55;
+    
+    m_EventCore.register(m_SaveBtn, HitTest, onSaveClick);
+    m_EventCore.register(m_UndoBtn, HitTest, onCancelClick);
 }
 
 //================================================================= Read Map File ==================================================================//
@@ -94,6 +93,8 @@ function readFile() {
     var content = fs.readFileSync(map_path, "utf-8");
     var obj = JSON.parse(content);
     var m_MapData = obj.map;
+    console.log(obj.height);
+    console.log(obj.width);
     return m_MapData;
 }
 
@@ -123,7 +124,7 @@ function createNewMap(width, height, tileWidth, tileHeight)
     {
         for(var row = 0; row < height; row++)
         {
-            var tile = new editor.imgTile();
+            var tile = new editor.Tile();
             tile.setWalkable(true);
             tile.source = EMPTY_TILE_PATH;
             tile.x = col * tileWidth;
@@ -133,8 +134,8 @@ function createNewMap(width, height, tileWidth, tileHeight)
             tile.width = tileWidth;
             tile.height = tileHeight;
             map.addChild(tile);
-            
-            m_EventCore.register(tile, HitTest, onTileClick);            
+                        
+            m_EventCore.register(tile, HitTest, onMapTileClick);            
         }        
     }
     
@@ -142,7 +143,7 @@ function createNewMap(width, height, tileWidth, tileHeight)
 }
 
 //Hit test function
-var HitTest = (localPoint:math.Point,displayObject:render.DisplayObject) =>{
+function HitTest (localPoint:math.Point,displayObject:render.DisplayObject){
     return (localPoint.x >= 0 && localPoint.x <= displayObject.width && localPoint.y >= 0 && localPoint.y <= displayObject.height);
 }
 
@@ -156,7 +157,8 @@ function onSaveClick() {
 
 //================================================================= Undo Button ==================================================================//
 function onCancelClick() {
-    UndoTile();
+    //UndoTile();  
+    readFile();
     console.log("Cancel");   
 }
 
@@ -170,6 +172,11 @@ function onMapTileClick(tile)
  
 }
 
+function onTilesetClick(tile)
+{
+    m_CurrentTile = tile.id;    
+}
+/*
 function onTileClick(tile) {
      console.log(tile.ownedRow+" "+tile.ownedCol+" "+m_MapData[tile.ownedRow][tile.ownedCol]); 
      m_Undo[0][m_Undolength] = tile.ownedRow;
@@ -185,23 +192,18 @@ function onTileClick(tile) {
     //m_RecordTile = tile;
     console.log(tile);
 }
-
+*/
 function onCreateMap()
 {
-    var maxW = parseInt((<HTMLInputElement>document.getElementById("map-width")).max);
-    var maxH = parseInt((<HTMLInputElement>document.getElementById("map-height")).max);
     
     var mapW = parseInt((<HTMLInputElement>document.getElementById("map-width")).value);
     var mapH = parseInt((<HTMLInputElement>document.getElementById("map-height")).value);
     var mapName = (<HTMLInputElement>document.getElementById("map-name")).value;
     
-    var maxTW = parseInt((<HTMLInputElement>document.getElementById("tile-width")).max);
-    var maxTH = parseInt((<HTMLInputElement>document.getElementById("tile-height")).max)
-    
     var tileW = parseInt((<HTMLInputElement>document.getElementById("tile-width")).value);
     var tileH = parseInt((<HTMLInputElement>document.getElementById("tile-height")).value);
     
-    m_MapEditor = createNewMap(mapW>maxW?maxW:mapW, mapH>maxH?maxH:mapH, tileW>maxTW?maxTW:tileW, tileH>maxTH?maxTH:tileH);
+    m_MapEditor = createNewMap(mapW, mapH, tileW, tileH);
     
     Start();
 }

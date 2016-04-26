@@ -20,6 +20,12 @@
             <label for="name"> Map Name: </label>
             <input type="text" id="map-name" value="map" required>
             
+            <label for="tileWidth">Tile Width: </label>
+            <input type="number" min="16" value="32" max="32" id="tile-width" required>
+            
+            <label for="height">Tile Height: </label>
+            <input type="number" min="16" value="32" max="32" id="tile-height" required>
+            
             <button onclick="onCreateMap()" type="button">New Map</button>
         </div>
     </form>
@@ -35,42 +41,7 @@
             <script src="main.js"></script>
             <script src="game.js"></script>
         </canvas>
-    </canvas>
-    
-    
-    <h2>Tileset </h2>
-    <form>
-        <div class="tileset">
-            <label for="tileWidth">Tile Width: </label>
-            <input type="number" min="16" value="32" max="32" id="tile-width" required>
-            
-            <label for="height">Tile Height: </label>
-            <input type="number" min="16" value="32" max="32" id="tile-height" required>
-            
-            <label for="name"> Tileset: </label>
-            <select type="text" id="map-name" required>
-                <option value="tileset">Environment</option>
-                <option value="item01">Items Set 1</option>
-                <option value="items02">Items Set 2</option>
-            </select>
-            <button onclick="onLoadTileset()" type="button">Load Tileset</button>
-        </div>
-    </form>
-    
-    <canvas id="tilesetArea" width="800" height="320">
-        <canvas>
-            <script src="math.js"></script>
-            <script src="data.js"></script>
-            <script src="renderer.js"></script>          
-            <script src="events.js"></script>
-            <script src="ui.js"></script>
-            <script src="editor.js"></script>
-            <script src="main.js"></script>
-            <script src="game.js"></script>
-        </canvas>
-    </canvas>
-    
-        
+    </canvas>        
 </body>
 
 </html>

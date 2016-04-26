@@ -22,12 +22,10 @@ var m_UndoBtn;
 //Editor Elements
 var m_EventCore = events.EventCore.getInstance();
 m_EventCore.init();
-m_EventCore.register(m_SaveBtn, HitTest, onSaveClick);
-m_EventCore.register(m_UndoBtn, HitTest, onCancelClick);
-var m_Storage = data.Storage.getInstance();
-m_Storage.readFile();
-var m_MapData = m_Storage.mapData;
+var m_Map = new data.Map(10, 8, "map");
+var m_MapData;
 //m_MapEditor = createMapEditor();
+onCreateMap();
 Start();
 //==============================================================================================================================================//
 //================================================================= Functions ==================================================================//
@@ -60,6 +58,8 @@ function InitUI() {
     m_UndoBtn.source = CANCEL_BTN_PATH;
     m_UndoBtn.x = 350;
     m_UndoBtn.y = 55;
+    m_EventCore.register(m_SaveBtn, HitTest, onSaveClick);
+    m_EventCore.register(m_UndoBtn, HitTest, onCancelClick);
 }
 //================================================================= Read Map File ==================================================================//
 function readFile() {
@@ -67,6 +67,8 @@ function readFile() {
     var content = fs.readFileSync(map_path, "utf-8");
     var obj = JSON.parse(content);
     var m_MapData = obj.map;
+    console.log(obj.height);
+    console.log(obj.width);
     return m_MapData;
 }
 //================================================================= Save Map File ==================================================================//
@@ -88,7 +90,7 @@ function createNewMap(width, height, tileWidth, tileHeight) {
     var map = new editor.WorldMap();
     for (var col = 0; col < width; col++) {
         for (var row = 0; row < height; row++) {
-            var tile = new editor.imgTile();
+            var tile = new editor.Tile();
             tile.setWalkable(true);
             tile.source = EMPTY_TILE_PATH;
             tile.x = col * tileWidth;
@@ -98,15 +100,15 @@ function createNewMap(width, height, tileWidth, tileHeight) {
             tile.width = tileWidth;
             tile.height = tileHeight;
             map.addChild(tile);
-            m_EventCore.register(tile, HitTest, onTileClick);
+            m_EventCore.register(tile, HitTest, onMapTileClick);
         }
     }
     return map;
 }
 //Hit test function
-var HitTest = function (localPoint, displayObject) {
+function HitTest(localPoint, displayObject) {
     return (localPoint.x >= 0 && localPoint.x <= displayObject.width && localPoint.y >= 0 && localPoint.y <= displayObject.height);
-};
+}
 function onSaveClick() {
     console.log("Save");
 }
@@ -115,7 +117,8 @@ function onSaveClick() {
 //===========================================================================================================================================================//
 //================================================================= Undo Button ==================================================================//
 function onCancelClick() {
-    UndoTile();
+    //UndoTile();  
+    readFile();
     console.log("Cancel");
 }
 //================================================================= Map Tile Button ==================================================================//
@@ -124,32 +127,30 @@ function onMapTileClick(tile) {
     //m_MapData[tile.ownedRow][tile.ownedCol] %= 2;
     console.log(m_MapData[tile.ownedRow][tile.ownedCol]);
 }
+/*
 function onTileClick(tile) {
-    console.log(tile.ownedRow + " " + tile.ownedCol + " " + m_MapData[tile.ownedRow][tile.ownedCol]);
-    m_Undo[0][m_Undolength] = tile.ownedRow;
-    m_Undo[1][m_Undolength] = tile.ownedCol;
-    m_Undo[2][m_Undolength] = m_MapData[tile.ownedRow][tile.ownedCol];
-    m_Undolength++;
-    if (m_MapData[tile.ownedRow][tile.ownedCol] == 0)
-        m_MapData[tile.ownedRow][tile.ownedCol] = 1;
-    else
-        m_MapData[tile.ownedRow][tile.ownedCol] = 0;
+     console.log(tile.ownedRow+" "+tile.ownedCol+" "+m_MapData[tile.ownedRow][tile.ownedCol]);
+     m_Undo[0][m_Undolength] = tile.ownedRow;
+     m_Undo[1][m_Undolength] = tile.ownedCol;
+     m_Undo[2][m_Undolength] = m_MapData[tile.ownedRow][tile.ownedCol];
+     m_Undolength++;
+   if( m_MapData[tile.ownedRow][tile.ownedCol]==0)
+       m_MapData[tile.ownedRow][tile.ownedCol]=1;
+   else
+      m_MapData[tile.ownedRow][tile.ownedCol]=0;
     tile.setWalkable(m_MapData[tile.ownedRow][tile.ownedCol]);
     //m_Stage.addChild(StatusBUr(tile));
     //m_RecordTile = tile;
     console.log(tile);
 }
+*/
 function onCreateMap() {
-    var maxW = parseInt(document.getElementById("map-width").max);
-    var maxH = parseInt(document.getElementById("map-height").max);
     var mapW = parseInt(document.getElementById("map-width").value);
     var mapH = parseInt(document.getElementById("map-height").value);
     var mapName = document.getElementById("map-name").value;
-    var maxTW = parseInt(document.getElementById("tile-width").max);
-    var maxTH = parseInt(document.getElementById("tile-height").max);
     var tileW = parseInt(document.getElementById("tile-width").value);
     var tileH = parseInt(document.getElementById("tile-height").value);
-    m_MapEditor = createNewMap(mapW > maxW ? maxW : mapW, mapH > maxH ? maxH : mapH, tileW > maxTW ? maxTW : tileW, tileH > maxTH ? maxTH : tileH);
+    m_MapEditor = createNewMap(mapW, mapH, tileW, tileH);
     Start();
 }
 /*

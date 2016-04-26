@@ -22,27 +22,27 @@ var editor;
         return WorldMap;
     }(render.DisplayObjectContainer));
     editor.WorldMap = WorldMap;
-    var imgTile = (function (_super) {
-        __extends(imgTile, _super);
-        function imgTile() {
+    var Tile = (function (_super) {
+        __extends(Tile, _super);
+        function Tile() {
             _super.call(this);
             this.walkable = true;
         }
-        imgTile.prototype.setWalkable = function (value) {
+        Tile.prototype.setWalkable = function (value) {
             this.walkable = value;
         };
-        imgTile.prototype.setImage = function (value) {
+        Tile.prototype.setImage = function (value) {
             this.source = value;
         };
-        imgTile.prototype.getImage = function () {
+        Tile.prototype.getImage = function () {
             return this.source;
         };
-        imgTile.prototype.getWalkable = function () {
+        Tile.prototype.getWalkable = function () {
             return this.walkable;
         };
-        return imgTile;
+        return Tile;
     }(render.Bitmap));
-    editor.imgTile = imgTile;
+    editor.Tile = Tile;
     /*
         export class Tile extends render.Rect {
     

@@ -26,8 +26,9 @@ module editor {
         }
     }
 
-    export class imgTile extends render.Bitmap
+    export class Tile extends render.Bitmap
     {
+        public id: number;
         public ownedRow: number;
         public ownedCol: number;
         private walkable: boolean = true;
