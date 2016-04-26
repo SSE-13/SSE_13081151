@@ -32,6 +32,10 @@ var editor;
             this.walkable = value;
         };
         imgTile.prototype.setImage = function (value) {
+            this.source = value;
+        };
+        imgTile.prototype.getImage = function () {
+            return this.source;
         };
         imgTile.prototype.getWalkable = function () {
             return this.walkable;
@@ -39,24 +43,34 @@ var editor;
         return imgTile;
     }(render.Bitmap));
     editor.imgTile = imgTile;
-    var Tile = (function (_super) {
-        __extends(Tile, _super);
-        function Tile() {
-            _super.call(this);
-            this.walkable = true;
+    /*
+        export class Tile extends render.Rect {
+    
+    
+            public ownedRow: number;
+            public ownedCol: number;
+            private walkable: boolean = true;
+    
+            constructor() {
+                super();
+            }
+    
+            public setWalkable(value) {
+                this.walkable = value;
+                this.color = value ? "#0000FF" : "#FF0000";
+            }
+            
+            public setImage(value)
+            {
+                
+            }
+            
+            public getWalkable()
+            {
+                return this.walkable;
+            }
         }
-        Tile.prototype.setWalkable = function (value) {
-            this.walkable = value;
-            this.color = value ? "#0000FF" : "#FF0000";
-        };
-        Tile.prototype.setImage = function (value) {
-        };
-        Tile.prototype.getWalkable = function () {
-            return this.walkable;
-        };
-        return Tile;
-    }(render.Rect));
-    editor.Tile = Tile;
+        */
     var ControlPanel = (function (_super) {
         __extends(ControlPanel, _super);
         function ControlPanel() {

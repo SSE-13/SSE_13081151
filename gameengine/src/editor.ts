@@ -21,7 +21,6 @@ module editor {
 
         }
 
-
         render(context: CanvasRenderingContext2D) {
             super.render(context);
         }
@@ -44,7 +43,12 @@ module editor {
         
         public setImage(value)
         {
-            
+            this.source = value;
+        }
+        
+        public getImage()
+        {
+            return this.source;
         }
         
         public getWalkable()
@@ -53,6 +57,7 @@ module editor {
         }
     }
 
+/*
     export class Tile extends render.Rect {
 
 
@@ -79,6 +84,7 @@ module editor {
             return this.walkable;    
         }
     }
+    */
     
     
     export class ControlPanel extends render.DisplayObjectContainer {

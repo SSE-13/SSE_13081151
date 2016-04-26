@@ -6,7 +6,7 @@ var CANCEL_BTN_PATH = ASSETS_PATH + "Cancel.png";
 var EMPTY_TILE_PATH = ASSETS_PATH + "emptyTile.png";
 var m_Undolength = 0;
 var m_Undo = new Array(4);
-var m_RecordTile = new editor.Tile;
+//var m_RecordTile =  new editor.Tile;
 for (var i = 0; i < 3; i++) {
     m_Undo[i] = new Array();
 }
@@ -51,15 +51,15 @@ function InitUI() {
     m_SaveBtn.width = 50;
     m_SaveBtn.height = 50;
     m_SaveBtn.source = SAVE_BTN_PATH;
-    m_SaveBtn.x = 250;
+    m_SaveBtn.x = 350;
     m_SaveBtn.y = 0;
     //Undo Button
     m_UndoBtn = new render.Bitmap();
     m_UndoBtn.width = 50;
     m_UndoBtn.height = 50;
     m_UndoBtn.source = CANCEL_BTN_PATH;
-    m_UndoBtn.x = 320;
-    m_UndoBtn.y = 0;
+    m_UndoBtn.x = 350;
+    m_UndoBtn.y = 55;
 }
 //================================================================= Read Map File ==================================================================//
 function readFile() {
@@ -81,7 +81,6 @@ function UndoTile() {
         var new_col = m_Undo[1][m_Undolength - 1];
         m_MapData[new_row][new_col] = m_Undo[2][m_Undolength - 1];
         m_Undolength--;
-        m_RecordTile.setWalkable(m_MapData[new_row][new_col]);
     }
 }
 //================================================================= Create New Map ==================================================================//
@@ -98,33 +97,13 @@ function createNewMap(width, height, tileWidth, tileHeight) {
             tile.ownedRow = row;
             tile.width = tileWidth;
             tile.height = tileHeight;
-            console.log(tile);
             map.addChild(tile);
-            m_EventCore.register(tile, events.displayObjectRectHitTest, onMapTileClick);
+            m_EventCore.register(tile, HitTest, onTileClick);
         }
     }
     return map;
 }
-function createMapEditor() {
-    var world = new editor.WorldMap();
-    var rows = m_MapData.length;
-    var cols = m_MapData[0].length;
-    for (var col = 0; col < rows; col++) {
-        for (var row = 0; row < cols; row++) {
-            var tile = new editor.Tile();
-            tile.setWalkable(m_MapData[row][col]);
-            tile.x = col * editor.GRID_PIXEL_WIDTH;
-            tile.y = row * editor.GRID_PIXEL_HEIGHT;
-            tile.ownedCol = col;
-            tile.ownedRow = row;
-            tile.width = editor.GRID_PIXEL_WIDTH;
-            tile.height = editor.GRID_PIXEL_HEIGHT;
-            world.addChild(tile);
-            m_EventCore.register(tile, events.displayObjectRectHitTest, onTileClick);
-        }
-    }
-    return world;
-}
+//Hit test function
 var HitTest = function (localPoint, displayObject) {
     return (localPoint.x >= 0 && localPoint.x <= displayObject.width && localPoint.y >= 0 && localPoint.y <= displayObject.height);
 };
@@ -141,6 +120,9 @@ function onCancelClick() {
 }
 //================================================================= Map Tile Button ==================================================================//
 function onMapTileClick(tile) {
+    //m_MapData[tile.ownedRow][tile.ownedCol] ++;
+    //m_MapData[tile.ownedRow][tile.ownedCol] %= 2;
+    console.log(m_MapData[tile.ownedRow][tile.ownedCol]);
 }
 function onTileClick(tile) {
     console.log(tile.ownedRow + " " + tile.ownedCol + " " + m_MapData[tile.ownedRow][tile.ownedCol]);
@@ -153,26 +135,30 @@ function onTileClick(tile) {
     else
         m_MapData[tile.ownedRow][tile.ownedCol] = 0;
     tile.setWalkable(m_MapData[tile.ownedRow][tile.ownedCol]);
-    m_Stage.addChild(StatusBUr(tile));
-    m_RecordTile = tile;
+    //m_Stage.addChild(StatusBUr(tile));
+    //m_RecordTile = tile;
     console.log(tile);
 }
 function onCreateMap() {
+    var maxW = parseInt(document.getElementById("map-width").max);
+    var maxH = parseInt(document.getElementById("map-height").max);
     var mapW = parseInt(document.getElementById("map-width").value);
     var mapH = parseInt(document.getElementById("map-height").value);
     var mapName = document.getElementById("map-name").value;
+    var maxTW = parseInt(document.getElementById("tile-width").max);
+    var maxTH = parseInt(document.getElementById("tile-height").max);
     var tileW = parseInt(document.getElementById("tile-width").value);
     var tileH = parseInt(document.getElementById("tile-height").value);
-    console.log(mapW + ":" + mapH + ":" + tileH + ":" + tileW);
-    m_MapEditor = createNewMap(mapW, mapH, tileW, tileH);
+    m_MapEditor = createNewMap(mapW > maxW ? maxW : mapW, mapH > maxH ? maxH : mapH, tileW > maxTW ? maxTW : tileW, tileH > maxTH ? maxTH : tileH);
     Start();
-    console.log(mapName);
 }
+/*
 function StatusBUr(tile) {
     var Container = new render.DisplayObjectContainer();
     var m_CanPassOrNot = new ui.Button();
     Container.x = 250;
     Container.y = 50;
+   
     //var m_bitmap=new render.Bitmap();
     //m_bitmap.source = "Save.png";
     var X = tile.ownedRow + 1;
@@ -189,24 +175,25 @@ function StatusBUr(tile) {
     m_CanPassOrNot.height = 30;
     m_CanPassOrNot.x = 10;
     m_CanPassOrNot.y = 50;
-    // m_CanPassOrNot.source = m_bitmap;
+   // m_CanPassOrNot.source = m_bitmap;
     var m_Background = new render.Rect();
     m_Background.width = 50;
     m_Background.height = 50;
     m_Background.x = 10;
     m_Background.y = 130;
     if (m_MapData[tile.ownedRow][tile.ownedCol] == 0) {
-        m_CanPassOrNot.text = "可走";
-        m_Background.color = "#FF0000";
-    }
-    else {
-        m_CanPassOrNot.text = "不可走";
-        m_Background.color = "#0000FF";
-    }
-    m_CanPassOrNot.onClick = function () {
+            m_CanPassOrNot.text = "可走";
+            m_Background.color = "#FF0000" ;
+     }
+     else {
+            m_CanPassOrNot.text = "不可走";
+            m_Background.color = "#0000FF" ;
+     }
+      m_CanPassOrNot.onClick = ()=> {
         onTileClick(tile);
-    };
+    }
     Container.addChild(m_CanPassOrNot);
     Container.addChild(m_Background);
     return Container;
 }
+*/
