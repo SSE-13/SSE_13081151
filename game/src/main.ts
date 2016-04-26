@@ -1,6 +1,6 @@
 
 
-function CreateMap(layerData){
+function CreateBackgound(layerData){
     var world = new editor.WorldMap();
     var rows= layerData.length;
     var cols= layerData[0].length;
@@ -8,10 +8,30 @@ function CreateMap(layerData){
     for(var col =0;col<cols;col++){
        for(var row=0;row<cols;row++){
            var tile = new editor.Tile();
-           var data = layerData[row][col];
-                 
-           var walkable = data > 0 ? 1 : 0;
-           tile.setWalkable(walkable);
+          
+           tile.SetBackground(storage.m_layer0[row][col]);
+           tile.x = col * editor.GRID_PIXEL_WIDTH;
+           tile.y = row * editor.GRID_PIXEL_HEIGHT
+           tile.ownedCol = col;
+           tile.ownedRow = row;
+           tile.width = editor.GRID_PIXEL_WIDTH;
+           tile.height = editor.GRID_PIXEL_HEIGHT;
+           world.addChild(tile);
+       }
+    }
+    return world;
+}
+
+function CreateLayer1(layerData){
+    var world = new editor.WorldMap();
+    var rows= layerData.length;
+    var cols= layerData[0].length;
+    
+    for(var col =0;col<cols;col++){
+       for(var row=0;row<cols;row++){
+           var tile = new editor.Tile();
+          
+           tile.setWalkable(storage.m_layer1[row][col]);
            tile.x = col * editor.GRID_PIXEL_WIDTH;
            tile.y = row * editor.GRID_PIXEL_HEIGHT
            tile.ownedCol = col;
@@ -31,16 +51,14 @@ function onTileClick(tile: editor.Tile) {
 }
 
 var storage = data.Storage.getInstance();
-
-var  mapEditor;
+var m_Player=new render.Bitmap();
 
 var onLoadSuccess=() =>{
-    mapEditor = CreateMap(storage.m_layer0);
-    var layer1 = CreateMap(storage.m_layer1);
-    stage.addChild(mapEditor);
+    var layer0 = CreateBackgound(storage.m_layer0);
+    var layer1 = CreateLayer1(storage.m_layer1);
+    stage.addChild(layer0);
     stage.addChild(layer1);
-    layer1.x = 100;
-    layer1.y = 210;
+ //   body.run(layer1.;
 }
 storage.GetJson(onLoadSuccess);
 
@@ -48,11 +66,10 @@ var renderCore = new render.RenderCore();
 var eventCore = events.EventCore.getInstance();
 eventCore.init();
 
+//var body = new game.BoyBody(m_Player);
+
+
 var stage = new render.DisplayObjectContainer();
-renderCore.start(stage);
-    
-//var panel = new editor.ControlPanel();
-//panel.x = 300;
-//stage.addChild(panel);
+renderCore.start(stage,["grass.png","water.png","box.png","bridge.png","barrier.png","null.png"]);
 
 

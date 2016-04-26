@@ -5,8 +5,8 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var editor;
 (function (editor) {
-    editor.GRID_PIXEL_WIDTH = 50;
-    editor.GRID_PIXEL_HEIGHT = 50;
+    editor.GRID_PIXEL_WIDTH = 32;
+    editor.GRID_PIXEL_HEIGHT = 32;
     var WorldMap = (function (_super) {
         __extends(WorldMap, _super);
         function WorldMap() {
@@ -27,22 +27,25 @@ var editor;
         function Tile() {
             _super.call(this);
         }
-        /* public SetBackground(value){
-             if(value==0){
-                 this.color ="#0000FF";
-             }else if(value==1){
-                 this.color ="#00F0FF";
-             }else if(value==2){
-                 this.color ="#00F000";
-             }
-             
-         }
-         */
+        Tile.prototype.SetBackground = function (value) {
+            this.source = "grass.png";
+        };
         Tile.prototype.setWalkable = function (value) {
-            this.color = value ? "#0000FF" : "#FF0000";
+            if (value == 0) {
+                this.source = "null.png";
+            }
+            else if (value == 1) {
+                this.source = "box.png";
+            }
+            else if (value == 2) {
+                this.source = "water.png";
+            }
+            else if (value == 3) {
+                this.source = "barrier.png";
+            }
         };
         return Tile;
-    }(render.Rect));
+    }(render.Bitmap));
     editor.Tile = Tile;
     var ControlPanel = (function (_super) {
         __extends(ControlPanel, _super);

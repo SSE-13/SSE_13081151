@@ -113,6 +113,7 @@ module render {
 
 
         source;
+       
 
         render(context: CanvasRenderingContext2D) {
 

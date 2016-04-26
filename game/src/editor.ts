@@ -2,9 +2,9 @@
 module editor {
 
 
-    export const GRID_PIXEL_WIDTH = 50;
+    export const GRID_PIXEL_WIDTH = 32;
 
-    export const GRID_PIXEL_HEIGHT = 50;
+    export const GRID_PIXEL_HEIGHT = 32;
 
     export class WorldMap extends render.DisplayObjectContainer {
 
@@ -28,33 +28,35 @@ module editor {
     }
 
 
-    export class Tile extends render.Rect {
+    export class Tile extends render.Bitmap {
 
 
         public ownedRow: number;
         public ownedCol: number;
+        walkable:boolean;
 
 
         constructor() {
             super();
         }
 
-   /* public SetBackground(value){
-        if(value==0){
-            this.color ="#0000FF";
-        }else if(value==1){
-            this.color ="#00F0FF";
-        }else if(value==2){
-            this.color ="#00F000";  
-        }
-        
-    }
-    */
-        public setWalkable(value) {
-            this.color = value ? "#0000FF" : "#FF0000";
-        }
+    public SetBackground(value:number){
+        this.source="grass.png";
     }
     
+     public setWalkable(value) {
+        if(value == 0){
+             this.source ="null.png";  
+        }else if(value==1){
+             this.source ="box.png";
+        }else if(value==2){
+             this.source ="water.png"; 
+        }else if(value==3){
+             this.source ="barrier.png"; 
+        }
+
+        }
+    }
     
     export class ControlPanel extends render.DisplayObjectContainer {
         
