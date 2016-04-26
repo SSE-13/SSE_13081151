@@ -22,13 +22,19 @@ module data {
         }
         
         public saveFile(){
-            
+            console.log(this.mapData);
+            var map_path = __dirname + "/map.json"
+            var json="{\"map\":"+JSON.stringify(this.mapData)+"}";
+            fs.writeFileSync(map_path,json,"utf-8");
         }
         
         public mapData;
 
     }
-
-
+    
+    /*export class Tool
+    {
+        const enum ToolType {Pencil, Select, Eraser}
+    }*/
 
 }
