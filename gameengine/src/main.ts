@@ -5,6 +5,7 @@ import * as fs from 'fs';
 const ASSETS_PATH = __dirname + "\\assets\\";
 const SAVE_BTN_PATH = ASSETS_PATH + "Save.png";
 const CANCEL_BTN_PATH = ASSETS_PATH + "Cancel.png";
+const REDO_BTN_PATH = ASSETS_PATH + "Redo.png";
 const EMPTY_TILE_PATH = ASSETS_PATH + "0.png";
 const WATER_TILE_PATH = ASSETS_PATH + "1.png";
 const CRATE_TILE_PATH = ASSETS_PATH + "2.png";
@@ -18,7 +19,7 @@ const GRASS_TILE_PATH = ASSETS_PATH + "9.png";
 
 var m_Undolength =0;
 var m_Undo = new Array(4);
-var m_CurrentTile = 9;
+var m_CurrentTile = 0;
 var m_CurrentLayer = 0;
 
 //var m_RecordTile =  new editor.Tile;
@@ -34,10 +35,12 @@ var m_Stage;
 var m_Panel;
 var m_RenderCore;
 var m_MapEditor;
+var m_Container;
 
 //Buttons
 var m_SaveBtn;
 var m_UndoBtn;
+var m_RedoBtn;
 
 //Editor Elements
 var m_EventCore = events.EventCore.getInstance();
@@ -61,16 +64,18 @@ function Start()
     m_Panel.x = 300; 
  
     InitUI();
-    
+    tileContainer();
     m_Stage = new render.DisplayObjectContainer();   
     m_Stage.addChild(m_MapEditor);
     m_Stage.addChild(m_Panel);
     m_Stage.addChild(m_SaveBtn);
     m_Stage.addChild(m_UndoBtn);
+    m_Stage.addChild(m_RedoBtn);
+    m_Stage.addChild(m_Container);
     
     m_RenderCore = new render.RenderCore();
     m_RenderCore.start(m_Stage);
-    m_RenderCore.start(m_Stage, [SAVE_BTN_PATH, EMPTY_TILE_PATH, CANCEL_BTN_PATH, BRIDGE_TILE_PATH, CRATE_TILE_PATH, FENCE_BL_TILE_PATH, FENCE_BR_TILE_PATH, FENCE_F_TILE_PATH, FENCE_TL_TILE_PATH, FENCE_TR_TILE_PATH, GRASS_TILE_PATH]);
+    m_RenderCore.start(m_Stage, [SAVE_BTN_PATH, EMPTY_TILE_PATH, WATER_TILE_PATH, REDO_BTN_PATH, CANCEL_BTN_PATH, BRIDGE_TILE_PATH, CRATE_TILE_PATH, FENCE_BL_TILE_PATH, FENCE_BR_TILE_PATH, FENCE_F_TILE_PATH, FENCE_TL_TILE_PATH, FENCE_TR_TILE_PATH, GRASS_TILE_PATH]);
 }
 
 
@@ -93,8 +98,50 @@ function InitUI()
     m_UndoBtn.x = 350;
     m_UndoBtn.y = 55;
     
+    //Redo Button
+    m_RedoBtn = new render.Bitmap();
+    m_RedoBtn.width = 50;
+    m_RedoBtn.height = 50;
+    m_RedoBtn.source = REDO_BTN_PATH;
+    m_RedoBtn.x = 350;
+    m_RedoBtn.y = 110;
+    
     m_EventCore.register(m_SaveBtn, HitTest, onSaveClick);
     m_EventCore.register(m_UndoBtn, HitTest, onCancelClick);
+    m_EventCore.register(m_RedoBtn, HitTest, onRedoClick);
+}
+
+function tileContainer()
+{
+    m_Container = new render.DisplayObjectContainer();
+    m_Container.x = 400;
+    var m_ID = 0;
+    for(var col = 0; col < 4; col++)
+    {
+        for(var row = 0; row < 3; row++)
+        {
+            var tile = new editor.Tile();
+            tile.setWalkable(true);
+            if (m_ID > 9){
+                tile.source = ASSETS_PATH + 0 + ".png";
+                tile.id = 0;
+            }else{
+                tile.source = ASSETS_PATH + m_ID + ".png";
+                tile.id = m_ID;
+            }
+            tile.x = col * 32;
+            tile.y = row * 32;
+            tile.ownedCol = col;
+            tile.ownedRow = row;
+            tile.width = 32;
+            tile.height = 32;
+            m_Container.addChild(tile);
+            m_EventCore.register(tile, HitTest, onTilesetClick);     
+            m_ID++;       
+        }        
+    }
+    
+    return m_Container;
 }
 
 //================================================================= Read Map File ==================================================================//
@@ -124,6 +171,22 @@ function UndoTile() {
         //m_RecordTile.setWalkable(m_MapData[new_row][new_col]);
    }
 }
+
+//================================================================= Redo Operation ==================================================================//
+function RedoTile() {
+    if(m_Undolength<=0){ 
+        alert("Ended");
+        return;
+    }
+    else{
+        var new_row=m_Undo[0][m_Undolength+1];
+        var new_col=m_Undo[1][m_Undolength+1];
+        //m[new_row][new_col]= m_Undo[2][m_Undolength-1];
+        m_Undolength++;
+        //m_RecordTile.setWalkable(m_MapData[new_row][new_col]);
+   }
+}
+
 
 //================================================================= Create New Map ==================================================================//
 function createNewMap(width, height, tileWidth, tileHeight, layerID)
@@ -173,6 +236,11 @@ function onCancelClick() {
     console.log("Cancel");   
 }
 
+//================================================================= Redo Button ==================================================================//
+function onRedoClick() {
+    readFile();
+    console.log("Redo");
+}
 //================================================================= Map Tile Button ==================================================================//
 function onMapTileClick(tile)
 {
