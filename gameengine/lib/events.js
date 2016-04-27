@@ -37,6 +37,18 @@ var events;
         EventCore.prototype.register = function (displayObject, hitTest, onClick) {
             this.eventInfos.push({ displayObject: displayObject, hitTest: hitTest, onClick: onClick });
         };
+        EventCore.prototype.unregister = function (displayObject) {
+            var _this = this;
+            var index = -1;
+            this.eventInfos.forEach(function (element) {
+                if (element.displayObject == displayObject) {
+                    index = _this.eventInfos.indexOf(element);
+                }
+            });
+            if (index != -1) {
+                this.eventInfos.splice(index);
+            }
+        };
         return EventCore;
     }());
     events.EventCore = EventCore;

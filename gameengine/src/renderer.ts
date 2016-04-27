@@ -17,6 +17,7 @@ module render {
         protected _height = 100;
         protected _mouseEnabled = true;
         
+        protected opacity: number;
         
 
         public get width(): number {
@@ -70,7 +71,8 @@ module render {
         }
 
         draw(context: CanvasRenderingContext2D) {
-
+            
+            context.globalAlpha = this.opacity;
             var parent = this.parent;
             var localMatrix = this.getLocalMatrix();
             if (!parent) {
@@ -95,7 +97,12 @@ module render {
         }
 
         render(context: CanvasRenderingContext2D) {
-
+            
+        }
+        
+        public setOpacity(value:number)
+        {
+            this.opacity = value;
         }
     }
 
@@ -103,7 +110,7 @@ module render {
 
 
         children: Array<DisplayObject>
-        opacity: number;
+        context;
 
         constructor() {
             super();
@@ -118,7 +125,6 @@ module render {
         
 
         render(context) {
-            
             context.globalAlpha = this.opacity;
             
             for (var i = 0; i < this.children.length; i++) {
@@ -129,17 +135,26 @@ module render {
             context.globalAlpha = 1;
         }
         
-        public setOpacity(value:number)
-        {
-            this.opacity = value;
-        }
-        
         public setActive(value:boolean)
         {
             this.children.forEach(child => {
                 child.mouseEnabled = value
             });
         }
+        
+        public setOpacity(value:number)
+        {
+            this.children.forEach(child => {
+                child.setOpacity(value);
+                
+            });
+        }
+        
+        protected getChild(col:number, row:number)
+        {
+            
+        }       
+        
     }
 
     export class Bitmap extends DisplayObject {

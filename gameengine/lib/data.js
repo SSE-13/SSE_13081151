@@ -1,13 +1,14 @@
 var fs = require("fs");
 var data;
 (function (data) {
-    data.NUM_LAYERS = 2;
+    data.NUM_LAYERS = 3;
     data.ASSETS_PATH = __dirname + "\\assets\\";
     data.MAP_EXTENSION = ".json";
     var Storage = (function () {
         function Storage(height, width, name) {
             this.TILE_WIDTH = 32;
             this.TILE_HEIGHT = 32;
+            this.COLLISION_LAYER = data.NUM_LAYERS - 1;
             this.height = height;
             this.width = width;
             this.name = name;
@@ -28,6 +29,33 @@ var data;
             }
             return Storage._instance;
         };
+        Object.defineProperty(Storage.prototype, "MapHeight", {
+            get: function () {
+                return this.height;
+            },
+            set: function (value) {
+                this.height = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Storage.prototype, "MapWidth", {
+            get: function () {
+                return this.width;
+            },
+            set: function (value) {
+                this.width = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Storage.prototype, "NumLayers", {
+            get: function () {
+                return data.NUM_LAYERS;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Storage.prototype.readFile = function () {
             var map_path = data.ASSETS_PATH + this.name + data.MAP_EXTENSION;
             var content = fs.readFileSync(map_path, "utf-8");
@@ -43,8 +71,14 @@ var data;
             var map_path = data.ASSETS_PATH + this.name + data.MAP_EXTENSION;
             var json = "{\"height\":" + JSON.stringify(this.height) + ","
                 + "\"width\":" + JSON.stringify(this.width) + ","
-                + "\"layer0\":" + JSON.stringify(this.layers[0]) + ","
-                + "\"layer1\":" + JSON.stringify(this.layers[1]) + "}";
+                + "\"layers\"" + JSON.stringify(this.layers) + "}";
+            /*for(var i = 0; i < NUM_LAYERS-1; i++)
+            {
+                json += "\"layer" + i + "\":" + JSON.stringify(this.layers[i]) + ","
+            }
+            
+            json += "\"collisionLayer\":" + JSON.stringify(this.layers[this.COLLISION_LAYER]) + "}"
+            */
             console.log(map_path);
             console.log(json);
             fs.writeFileSync(map_path, json, "utf-8");

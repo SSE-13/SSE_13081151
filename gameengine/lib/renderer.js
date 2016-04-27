@@ -58,6 +58,7 @@ var render;
             return localMatrix;
         };
         DisplayObject.prototype.draw = function (context) {
+            context.globalAlpha = this.opacity;
             var parent = this.parent;
             var localMatrix = this.getLocalMatrix();
             if (!parent) {
@@ -72,6 +73,9 @@ var render;
             this.render(context);
         };
         DisplayObject.prototype.render = function (context) {
+        };
+        DisplayObject.prototype.setOpacity = function (value) {
+            this.opacity = value;
         };
         return DisplayObject;
     }());
@@ -95,13 +99,17 @@ var render;
             }
             context.globalAlpha = 1;
         };
-        DisplayObjectContainer.prototype.setOpacity = function (value) {
-            this.opacity = value;
-        };
         DisplayObjectContainer.prototype.setActive = function (value) {
             this.children.forEach(function (child) {
                 child.mouseEnabled = value;
             });
+        };
+        DisplayObjectContainer.prototype.setOpacity = function (value) {
+            this.children.forEach(function (child) {
+                child.setOpacity(value);
+            });
+        };
+        DisplayObjectContainer.prototype.getChild = function (col, row) {
         };
         return DisplayObjectContainer;
     }(DisplayObject));

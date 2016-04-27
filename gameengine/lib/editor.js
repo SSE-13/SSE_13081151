@@ -20,6 +20,9 @@ var editor;
         WorldMap.prototype.render = function (context) {
             _super.prototype.render.call(this, context);
         };
+        WorldMap.prototype.getTile = function (col, row) {
+            return;
+        };
         return WorldMap;
     }(render.DisplayObjectContainer));
     editor.WorldMap = WorldMap;

@@ -67,6 +67,20 @@ module events {
             this.eventInfos.push({ displayObject, hitTest, onClick });
 
         }
+        
+        unregister(displayObject)
+        {
+            var index = -1;
+            this.eventInfos.forEach(element => {
+                if (element.displayObject == displayObject){
+                    index = this.eventInfos.indexOf(element);
+                }
+            });
+            
+            if (index != -1){
+                this.eventInfos.splice(index);
+            }
+        }
 
     }
 }

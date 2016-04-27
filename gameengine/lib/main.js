@@ -2,6 +2,7 @@
 var ASSETS_PATH = __dirname + "\\assets\\";
 var SAVE_BTN_PATH = ASSETS_PATH + "Save.png";
 var CANCEL_BTN_PATH = ASSETS_PATH + "Cancel.png";
+var COLLISION_TILE_PATH = ASSETS_PATH + "x.png";
 var REDO_BTN_PATH = ASSETS_PATH + "Redo.png";
 var EMPTY_TILE_PATH = ASSETS_PATH + "0.png";
 var WATER_TILE_PATH = ASSETS_PATH + "1.png";
@@ -17,7 +18,6 @@ var m_Undolength = 0;
 var m_Undo = new Array(4);
 var m_CurrentTile = 0;
 var m_CurrentLayer = 0;
-var NUM_LAYERS = 2;
 //var m_RecordTile =  new editor.Tile;
 for (var i = 0; i < 3; i++) {
     m_Undo[i] = new Array();
@@ -49,7 +49,7 @@ function Start() {
     InitUI();
     tileContainer();
     m_Stage = new render.DisplayObjectContainer();
-    for (var i = 0; i < NUM_LAYERS; i++)
+    for (var i = 0; i < m_Map.NumLayers; i++)
         m_Stage.addChild(m_MapEditor[i]);
     m_Stage.addChild(m_Panel);
     m_Stage.addChild(m_SaveBtn);
@@ -58,7 +58,7 @@ function Start() {
     m_Stage.addChild(m_Container);
     m_RenderCore = new render.RenderCore();
     m_RenderCore.start(m_Stage);
-    m_RenderCore.start(m_Stage, [SAVE_BTN_PATH, EMPTY_TILE_PATH, WATER_TILE_PATH, REDO_BTN_PATH, CANCEL_BTN_PATH, BRIDGE_TILE_PATH, CRATE_TILE_PATH, FENCE_BL_TILE_PATH, FENCE_BR_TILE_PATH, FENCE_F_TILE_PATH, FENCE_TL_TILE_PATH, FENCE_TR_TILE_PATH, GRASS_TILE_PATH]);
+    m_RenderCore.start(m_Stage, [SAVE_BTN_PATH, EMPTY_TILE_PATH, WATER_TILE_PATH, REDO_BTN_PATH, CANCEL_BTN_PATH, BRIDGE_TILE_PATH, CRATE_TILE_PATH, FENCE_BL_TILE_PATH, FENCE_BR_TILE_PATH, FENCE_F_TILE_PATH, FENCE_TL_TILE_PATH, FENCE_TR_TILE_PATH, GRASS_TILE_PATH, COLLISION_TILE_PATH]);
 }
 //UI Elements initialization
 function InitUI() {
@@ -141,10 +141,14 @@ function RedoTile() {
 //================================================================= Create Map Operation ==================================================================//
 function createNewMap(width, height) {
     m_CurrentLayer = 0;
-    m_Map.layers = new Array(NUM_LAYERS);
+    m_Map.layers = new Array(m_Map.NumLayers);
+    m_Map.MapHeight = height;
+    m_Map.MapWidth = width;
     var mapEditor = new Array(3);
-    for (var i = 0; i < NUM_LAYERS; i++) {
+    for (var i = 0; i < m_Map.NumLayers; i++) {
         mapEditor[i] = new editor.WorldMap("layer" + i);
+        if (i == m_Map.COLLISION_LAYER)
+            mapEditor[i] = new editor.WorldMap("collisionLayer");
         mapEditor[i].x = 0; //i * (width * m_Map.TILE_WIDTH) ;
         mapEditor[i].y = 0;
         mapEditor[i].width = width * m_Map.TILE_WIDTH;
@@ -191,8 +195,15 @@ function onRedoClick() {
 }
 //================================================================= Map Tile Button ==================================================================//
 function onMapTileClick(tile) {
-    m_Map.layers[m_CurrentLayer][tile.ownedRow][tile.ownedCol] = m_CurrentTile;
-    tile.source = ASSETS_PATH + m_CurrentTile + ".png";
+    if (m_CurrentLayer != m_Map.COLLISION_LAYER) {
+        m_Map.layers[m_CurrentLayer][tile.ownedRow][tile.ownedCol] = m_CurrentTile;
+        tile.source = ASSETS_PATH + m_CurrentTile + ".png";
+    }
+    else {
+        tile.setWalkable(!tile.getWalkable());
+        tile.source = tile.getWalkable() ? EMPTY_TILE_PATH : COLLISION_TILE_PATH;
+        m_Map.layers[m_Map.COLLISION_LAYER][tile.ownedRow][tile.ownedCol] = tile.getWalkable() ? 0 : 1;
+    }
 }
 function onTilesetClick(tile) {
     m_CurrentTile = tile.id;
@@ -215,6 +226,17 @@ function onTileClick(tile) {
     console.log(tile);
 }
 */
+function cleanUp() {
+    if (m_MapEditor != null) {
+        for (var layer = 0; layer < m_Map.NumLayers; layer++) {
+            for (var col = 0; col < m_Map.MapWidth; col++) {
+                for (var row = 0; row < m_Map.MapHeight; row++) {
+                    m_EventCore.unregister(m_MapEditor.getTile(layer, col, row));
+                }
+            }
+        }
+    }
+}
 function onCreateMap() {
     var mapW = parseInt(document.getElementById("map-width").value);
     var mapH = parseInt(document.getElementById("map-height").value);
@@ -225,7 +247,7 @@ function onCreateMap() {
 function onLayerChange() {
     m_CurrentLayer = document.getElementById("layer").selectedIndex;
     console.log(m_CurrentLayer);
-    for (var i = 0; i < NUM_LAYERS; i++) {
+    for (var i = 0; i < m_Map.NumLayers; i++) {
         if (i != m_CurrentLayer) {
             m_MapEditor[i].setOpacity(0.5);
             m_MapEditor[i].setActive(false);
