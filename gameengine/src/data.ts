@@ -2,7 +2,7 @@ var fs = require("fs");
 
 module data {
 
-    export const NUM_LAYERS = 3;
+    export const NUM_LAYERS = 2;
     export const ASSETS_PATH = __dirname + "\\assets\\";
     export const MAP_EXTENSION = ".json";
 
@@ -62,9 +62,14 @@ module data {
         
         public saveFile(){
             console.log(this.layers);
-            //var map_path = ASSETS_PATH + this.name + MAP_EXTENSION;
-            //var json="{\"map\":"+JSON.stringify(this.mapData)+"}";
-            //fs.writeFileSync(map_path,json,"utf-8");
+            var map_path = ASSETS_PATH + this.name + MAP_EXTENSION;
+            var json="{\"height\":" + JSON.stringify(this.height) + ","
+                      +"\"width\":" + JSON.stringify(this.width) + ","
+                      +"\"layer0\":" + JSON.stringify(this.layers[0]) + ","
+                      +"\"layer1\":" + JSON.stringify(this.layers[1]) + "}";
+            console.log(map_path);
+            console.log(json);
+            fs.writeFileSync(map_path,json,"utf-8");
         }
         
         

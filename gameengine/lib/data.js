@@ -1,7 +1,7 @@
 var fs = require("fs");
 var data;
 (function (data) {
-    data.NUM_LAYERS = 3;
+    data.NUM_LAYERS = 2;
     data.ASSETS_PATH = __dirname + "\\assets\\";
     data.MAP_EXTENSION = ".json";
     var Storage = (function () {
@@ -40,9 +40,14 @@ var data;
         };
         Storage.prototype.saveFile = function () {
             console.log(this.layers);
-            //var map_path = ASSETS_PATH + this.name + MAP_EXTENSION;
-            //var json="{\"map\":"+JSON.stringify(this.mapData)+"}";
-            //fs.writeFileSync(map_path,json,"utf-8");
+            var map_path = data.ASSETS_PATH + this.name + data.MAP_EXTENSION;
+            var json = "{\"height\":" + JSON.stringify(this.height) + ","
+                + "\"width\":" + JSON.stringify(this.width) + ","
+                + "\"layer0\":" + JSON.stringify(this.layers[0]) + ","
+                + "\"layer1\":" + JSON.stringify(this.layers[1]) + "}";
+            console.log(map_path);
+            console.log(json);
+            fs.writeFileSync(map_path, json, "utf-8");
         };
         Storage.DEFAULT_WIDTH = 5;
         Storage.DEFAULT_HEIGHT = 5;

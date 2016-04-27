@@ -22,7 +22,7 @@ var m_Undo = new Array(4);
 var m_CurrentTile = 0;
 var m_CurrentLayer = 0;
 
-const NUM_LAYERS = 3;
+const NUM_LAYERS = 2;
 
 //var m_RecordTile =  new editor.Tile;
 
@@ -109,7 +109,7 @@ function InitUI()
     m_RedoBtn.y = 110;
     
     m_EventCore.register(m_SaveBtn, HitTest, onSaveClick);
-    m_EventCore.register(m_UndoBtn, HitTest, onCancelClick);
+    m_EventCore.register(m_UndoBtn, HitTest, onUndoClick);
     m_EventCore.register(m_RedoBtn, HitTest, onRedoClick);
 }
 
@@ -120,9 +120,9 @@ function tileContainer()
     m_Container = new render.DisplayObjectContainer();
     m_Container.x = 600;
     var m_ID = 0;
-    for(var col = 0; col < 4; col++)
+    for(var row = 0; row < 4; row++)
     {
-        for(var row = 0; row < 3; row++)
+        for(var col = 0; col < 3; col++)
         {
             var tile = new editor.Tile();
             tile.setWalkable(true);
@@ -133,12 +133,12 @@ function tileContainer()
                 tile.source = ASSETS_PATH + m_ID + ".png";
                 tile.id = m_ID;
             }
-            tile.x = col * 32;
-            tile.y = row * 32;
+            tile.x = col * m_Map.TILE_WIDTH;
+            tile.y = row * m_Map.TILE_HEIGHT;
             tile.ownedCol = col;
             tile.ownedRow = row;
-            tile.width = 32;
-            tile.height = 32;
+            tile.width = m_Map.TILE_WIDTH;
+            tile.height = m_Map.TILE_HEIGHT;
             m_Container.addChild(tile);
             m_EventCore.register(tile, HitTest, onTilesetClick);     
             m_ID++;       
@@ -150,12 +150,6 @@ function tileContainer()
 
 
 //================================================================= Save Map File ==================================================================//
-
-function SaveFile()
-{
-    //TODO:Save functionality    
-}
-
 function LoadFile()
 {
     //TODO:load functionality    
@@ -196,13 +190,13 @@ function createNewMap(width, height)
         mapEditor[i].y = 0;
         mapEditor[i].width = width * m_Map.TILE_WIDTH;
         mapEditor[i].height = height * m_Map.TILE_WIDTH;
-        m_Map.layers[i] = new Array(width);
-        for(var col = 0; col < width; col++)
+        m_Map.layers[i] = new Array(height);
+        for(var row = 0; row < height; row++)
         {
-            m_Map.layers[i][col] = new Array(height);
-            for(var row = 0; row < height; row++)
+            m_Map.layers[i][row] = new Array(width);
+            for(var col = 0; col < width; col++)
             {
-                m_Map.layers[i][col][row] = 0;
+                m_Map.layers[i][row][col] = 0;
                 var tile = new editor.Tile();
                 tile.setWalkable(true);
                 tile.source = EMPTY_TILE_PATH;
@@ -232,6 +226,7 @@ function HitTest (localPoint:math.Point,displayObject:render.DisplayObject){
 
 function onSaveClick() {  
     console.log("Save");   
+    m_Map.saveFile(); 
 }
 
 //===========================================================================================================================================================//
@@ -239,8 +234,8 @@ function onSaveClick() {
 //===========================================================================================================================================================//
 
 //================================================================= Undo Button ==================================================================//
-function onCancelClick() {
-    console.log("Cancel");   
+function onUndoClick() {
+    console.log("Undo");   
 }
 
 //================================================================= Redo Button ==================================================================//
@@ -250,7 +245,7 @@ function onRedoClick() {
 //================================================================= Map Tile Button ==================================================================//
 function onMapTileClick(tile)
 {
-    m_Map.layers[m_CurrentLayer][tile.ownedCol][tile.ownedRow] = m_CurrentTile;
+    m_Map.layers[m_CurrentLayer][tile.ownedRow][tile.ownedCol] = m_CurrentTile;
     tile.source = ASSETS_PATH + m_CurrentTile + ".png";
 }
 
