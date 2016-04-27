@@ -81,7 +81,23 @@ module astar {
         public get numRows(): number {
             return this._numRows;
         }
-
+/*
+        public getNeighbors(node: Node): Array<Node> {
+            var result = [];
+            var startX: number = Math.max(0, node.x - 1);
+            var endX: number = Math.min(this.numCols - 1, node.x + 1);
+            var startY: number = Math.max(0, node.y - 1);
+            var endY: number = Math.min(this.numRows - 1, node.y + 1);
+ 
+            if(){
+                   result.push(this.getNode(startX + 1, node.y));
+                    result.push(this.getNode(startX -1, node.y));
+                    result.push(this.getNode(startX, node.y + 1));
+                    result.push(this.getNode(startX, node.y - 1));
+            }
+            return result;
+        }
+        */
         public getNeighbors(node: Node): Array<Node> {
             var result = [];
             var startX: number = Math.max(0, node.x - 1);
