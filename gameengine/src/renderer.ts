@@ -150,9 +150,9 @@ module render {
             });
         }
         
-        protected getChild(col:number, row:number)
+        public getChild(col:number, row:number, width:number)
         {
-            
+            return this.children[row * width + col];
         }       
         
     }

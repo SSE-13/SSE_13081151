@@ -25,12 +25,7 @@ module editor {
 
         render(context: CanvasRenderingContext2D) {
             super.render(context);
-        }
-        
-        public getTile(col:number, row:number)
-        {
-            return 
-        }      
+        }   
     }
 
     export class Tile extends render.Bitmap

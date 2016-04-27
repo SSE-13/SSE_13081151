@@ -35,7 +35,7 @@ for(var i=0;i<3;i++)
 var m_Stage;
 var m_Panel;
 var m_RenderCore;
-var m_MapEditor;
+var m_MapEditor:Array<editor.WorldMap>;
 var m_Container;
 
 //Buttons
@@ -185,7 +185,7 @@ function createNewMap(width, height)
     m_Map.MapHeight = height;
     m_Map.MapWidth = width;
     
-    var mapEditor = new Array(3);
+    var mapEditor = new Array(m_Map.NumLayers);
     for(var i = 0; i < m_Map.NumLayers; i++){        
         mapEditor[i] = new editor.WorldMap("layer" + i);
         if( i == m_Map.COLLISION_LAYER)
@@ -287,7 +287,7 @@ function cleanUp()
         for(var layer = 0; layer < m_Map.NumLayers; layer++){
             for(var col = 0; col < m_Map.MapWidth; col++){
                 for(var row = 0; row < m_Map.MapHeight; row++){
-                    m_EventCore.unregister(m_MapEditor.getTile(layer, col, row));  
+                    m_EventCore.unregister(m_MapEditor[layer].getChild(col, row, m_Map.MapWidth));  
                 }
             }
         }
@@ -295,12 +295,12 @@ function cleanUp()
 }
 function onCreateMap()
 {
-    
+    cleanUp();
     var mapW = parseInt((<HTMLInputElement>document.getElementById("map-width")).value);
     var mapH = parseInt((<HTMLInputElement>document.getElementById("map-height")).value);
     
     m_MapEditor = createNewMap(mapW, mapH);
-    //onLayerChange();
+    onLayerChange();
     Start();
 }
 

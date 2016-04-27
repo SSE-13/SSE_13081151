@@ -109,7 +109,8 @@ var render;
                 child.setOpacity(value);
             });
         };
-        DisplayObjectContainer.prototype.getChild = function (col, row) {
+        DisplayObjectContainer.prototype.getChild = function (col, row, width) {
+            return this.children[row * width + col];
         };
         return DisplayObjectContainer;
     }(DisplayObject));

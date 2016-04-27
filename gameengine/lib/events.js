@@ -36,6 +36,7 @@ var events;
         };
         EventCore.prototype.register = function (displayObject, hitTest, onClick) {
             this.eventInfos.push({ displayObject: displayObject, hitTest: hitTest, onClick: onClick });
+            //this.eventInfos.unshift({ displayObject, hitTest, onClick });
         };
         EventCore.prototype.unregister = function (displayObject) {
             var _this = this;
