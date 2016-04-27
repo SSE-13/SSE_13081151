@@ -122,9 +122,9 @@ module render {
                 context.drawImage(image, 0, 0);
             }
             else {
-                context.font = "20px Arial";
+               /* context.font = "20px Arial";
                 context.fillStyle = '#000000';
-                context.fillText('错误的URL', 0, 20);
+                context.fillText('错误的URL', 0, 20);*/
             }
         }
 
