@@ -26,13 +26,51 @@ var editor;
         __extends(Tile, _super);
         function Tile() {
             _super.call(this);
+            this.walkable = true;
         }
         Tile.prototype.setWalkable = function (value) {
-            this.color = value ? "#0000FF" : "#FF0000";
+            this.walkable = value;
+        };
+        Tile.prototype.setImage = function (value) {
+            this.source = value;
+        };
+        Tile.prototype.getImage = function () {
+            return this.source;
+        };
+        Tile.prototype.getWalkable = function () {
+            return this.walkable;
         };
         return Tile;
-    }(render.Rect));
+    }(render.Bitmap));
     editor.Tile = Tile;
+    /*
+        export class Tile extends render.Rect {
+    
+    
+            public ownedRow: number;
+            public ownedCol: number;
+            private walkable: boolean = true;
+    
+            constructor() {
+                super();
+            }
+    
+            public setWalkable(value) {
+                this.walkable = value;
+                this.color = value ? "#0000FF" : "#FF0000";
+            }
+            
+            public setImage(value)
+            {
+                
+            }
+            
+            public getWalkable()
+            {
+                return this.walkable;
+            }
+        }
+        */
     var ControlPanel = (function (_super) {
         __extends(ControlPanel, _super);
         function ControlPanel() {

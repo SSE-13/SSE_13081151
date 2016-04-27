@@ -21,28 +21,72 @@ module editor {
 
         }
 
-
         render(context: CanvasRenderingContext2D) {
             super.render(context);
         }
     }
 
+    export class Tile extends render.Bitmap
+    {
+        public id: number;
+        public ownedRow: number;
+        public ownedCol: number;
+        private walkable: boolean = true;
+        
+        constructor()
+        {
+            super();
+        }
+        
+        public setWalkable(value) {
+            this.walkable = value;
+        }
+        
+        public setImage(value)
+        {
+            this.source = value;
+        }
+        
+        
+        public getImage()
+        {
+            return this.source;
+        }
+        
+        public getWalkable()
+        {
+            return this.walkable;    
+        }
+    }
 
+/*
     export class Tile extends render.Rect {
 
 
         public ownedRow: number;
         public ownedCol: number;
-
+        private walkable: boolean = true;
 
         constructor() {
             super();
         }
 
         public setWalkable(value) {
+            this.walkable = value;
             this.color = value ? "#0000FF" : "#FF0000";
         }
+        
+        public setImage(value)
+        {
+            
+        }
+        
+        public getWalkable()
+        {
+            return this.walkable;    
+        }
     }
+    */
     
     
     export class ControlPanel extends render.DisplayObjectContainer {
