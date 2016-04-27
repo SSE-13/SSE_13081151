@@ -1,4 +1,3 @@
-//var fs = require("fs");
 var data;
 (function (data) {
     var Storage = (function () {

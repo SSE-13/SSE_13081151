@@ -5,8 +5,8 @@ function CreateBackgound(layerData){
     var rows= layerData.length;
     var cols= layerData[0].length;
     
-    for(var col =0;col<cols;col++){
-       for(var row=0;row<cols;row++){
+    for(var row =0;row<rows;row++){
+       for(var col =0;col<cols;col++){
            var tile = new editor.Tile();
           
            tile.SetBackground(storage.m_layer0[row][col]);
@@ -27,11 +27,12 @@ function CreateLayer1(layerData){
     var rows= layerData.length;
     var cols= layerData[0].length;
     
-    for(var col =0;col<cols;col++){
-       for(var row=0;row<cols;row++){
+    for(var row =0;row<rows;row++){
+       for(var col =0;col<cols;col++){
            var tile = new editor.Tile();
           
-           tile.setWalkable(storage.m_layer1[row][col]);
+           tile.setBarrier(storage.m_layer1[row][col]);
+           world.grid.setWalkable(row,col,storage.m_layer1[col][row]);
            tile.x = col * editor.GRID_PIXEL_WIDTH;
            tile.y = row * editor.GRID_PIXEL_HEIGHT
            tile.ownedCol = col;
@@ -45,7 +46,8 @@ function CreateLayer1(layerData){
     }
     return world;
 }
-
+     
+ 
 function onTileClick(tile: editor.Tile) {
    m_PlayerBehavior.SetStart(m_Player.x/32,m_Player.y/32);
    m_PlayerBehavior.SetEnd(tile.ownedCol,tile.ownedRow);
