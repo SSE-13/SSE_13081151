@@ -16,7 +16,7 @@ var events;
                     var invertGlobalMatrix = math.invertMatrix(globalMatrix);
                     var newPoint = math.pointAppendMatrix(stageClickedPoint, invertGlobalMatrix);
                     //如果检测返回true，则认为点中了
-                    if (info.hitTest(newPoint, info.displayObject)) {
+                    if (info.displayObject.mouseEnabled && info.hitTest(newPoint, info.displayObject)) {
                         info.onClick(info.displayObject);
                         break;
                     }

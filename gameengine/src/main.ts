@@ -22,6 +22,8 @@ var m_Undo = new Array(4);
 var m_CurrentTile = 0;
 var m_CurrentLayer = 0;
 
+const NUM_LAYERS = 3;
+
 //var m_RecordTile =  new editor.Tile;
 
 for(var i=0;i<3;i++)
@@ -48,7 +50,6 @@ m_EventCore.init();
 
 var m_Map = data.Storage.getInstance();
 
- //m_MapEditor = createMapEditor();
 onCreateMap();
 Start();
 
@@ -56,8 +57,7 @@ Start();
 //================================================================= Functions ==================================================================//
 //==============================================================================================================================================//
 
-
-
+//Initialization
 function Start()
 {    
     m_Panel = new editor.ControlPanel();
@@ -66,7 +66,9 @@ function Start()
     InitUI();
     tileContainer();
     m_Stage = new render.DisplayObjectContainer();   
-    m_Stage.addChild(m_MapEditor);
+    for(var i = 0; i < NUM_LAYERS; i++)
+        m_Stage.addChild(m_MapEditor[i]);
+    
     m_Stage.addChild(m_Panel);
     m_Stage.addChild(m_SaveBtn);
     m_Stage.addChild(m_UndoBtn);
@@ -79,7 +81,7 @@ function Start()
 }
 
 
-
+//UI Elements initialization
 function InitUI()
 {
     //Save button
@@ -87,7 +89,7 @@ function InitUI()
     m_SaveBtn.width = 50;
     m_SaveBtn.height = 50;
     m_SaveBtn.source = SAVE_BTN_PATH;
-    m_SaveBtn.x = 350;
+    m_SaveBtn.x = 525;
     m_SaveBtn.y=0;
     
     //Undo Button
@@ -95,7 +97,7 @@ function InitUI()
     m_UndoBtn.width = 50;
     m_UndoBtn.height = 50;
     m_UndoBtn.source = CANCEL_BTN_PATH;
-    m_UndoBtn.x = 350;
+    m_UndoBtn.x = 525;
     m_UndoBtn.y = 55;
     
     //Redo Button
@@ -103,7 +105,7 @@ function InitUI()
     m_RedoBtn.width = 50;
     m_RedoBtn.height = 50;
     m_RedoBtn.source = REDO_BTN_PATH;
-    m_RedoBtn.x = 350;
+    m_RedoBtn.x = 525;
     m_RedoBtn.y = 110;
     
     m_EventCore.register(m_SaveBtn, HitTest, onSaveClick);
@@ -111,10 +113,12 @@ function InitUI()
     m_EventCore.register(m_RedoBtn, HitTest, onRedoClick);
 }
 
+
+
 function tileContainer()
 {
     m_Container = new render.DisplayObjectContainer();
-    m_Container.x = 400;
+    m_Container.x = 600;
     var m_ID = 0;
     for(var col = 0; col < 4; col++)
     {
@@ -144,21 +148,22 @@ function tileContainer()
     return m_Container;
 }
 
-//================================================================= Read Map File ==================================================================//
-function readFile() {
-    var map_path = __dirname + "/map.json"
-    var content = fs.readFileSync(map_path, "utf-8");
-    var obj = JSON.parse(content);
-    var m_MapData = obj.map;
-    console.log(obj.height);
-    console.log(obj.width);
-    return m_MapData;
-}
 
 //================================================================= Save Map File ==================================================================//
 
+function SaveFile()
+{
+    //TODO:Save functionality    
+}
+
+function LoadFile()
+{
+    //TODO:load functionality    
+}
+
 //================================================================= Undo Operation ==================================================================//
 function UndoTile() {
+    //TODO: Undo Operation
     if(m_Undolength<=0){ 
         alert("Ended");
         return;
@@ -174,46 +179,50 @@ function UndoTile() {
 
 //================================================================= Redo Operation ==================================================================//
 function RedoTile() {
-    if(m_Undolength<=0){ 
-        alert("Ended");
-        return;
-    }
-    else{
-        var new_row=m_Undo[0][m_Undolength+1];
-        var new_col=m_Undo[1][m_Undolength+1];
-        //m[new_row][new_col]= m_Undo[2][m_Undolength-1];
-        m_Undolength++;
-        //m_RecordTile.setWalkable(m_MapData[new_row][new_col]);
-   }
+    //TODO: Redo Operation
+
 }
 
 
-//================================================================= Create New Map ==================================================================//
-function createNewMap(width, height, tileWidth, tileHeight, layerID)
+//================================================================= Create Map Operation ==================================================================//
+function createNewMap(width, height)
 {
-    var map = new editor.WorldMap();
-    
-    for(var col = 0; col < width; col++)
-    {
-        for(var row = 0; row < height; row++)
+    m_CurrentLayer = 0;
+    m_Map.layers = new Array(NUM_LAYERS);
+    var mapEditor = new Array(3);
+    for(var i = 0; i < NUM_LAYERS; i++){        
+        mapEditor[i] = new editor.WorldMap("layer" + i);
+        mapEditor[i].x = 0;//i * (width * m_Map.TILE_WIDTH) ;
+        mapEditor[i].y = 0;
+        mapEditor[i].width = width * m_Map.TILE_WIDTH;
+        mapEditor[i].height = height * m_Map.TILE_WIDTH;
+        m_Map.layers[i] = new Array(width);
+        for(var col = 0; col < width; col++)
         {
-            m_Map.layers[layerID][col][row] = 0;
-            var tile = new editor.Tile();
-            tile.setWalkable(true);
-            tile.source = EMPTY_TILE_PATH;
-            tile.x = col * tileWidth;
-            tile.y = row * tileHeight;
-            tile.ownedCol = col;
-            tile.ownedRow = row;
-            tile.width = tileWidth;
-            tile.height = tileHeight;
-            map.addChild(tile);
-                        
-            m_EventCore.register(tile, HitTest, onMapTileClick);            
-        }        
+            m_Map.layers[i][col] = new Array(height);
+            for(var row = 0; row < height; row++)
+            {
+                m_Map.layers[i][col][row] = 0;
+                var tile = new editor.Tile();
+                tile.setWalkable(true);
+                tile.source = EMPTY_TILE_PATH;
+                tile.x = col * m_Map.TILE_WIDTH;
+                tile.y = row * m_Map.TILE_HEIGHT;
+                tile.ownedCol = col;
+                tile.ownedRow = row;
+                tile.width = m_Map.TILE_WIDTH;
+                tile.height = m_Map.TILE_HEIGHT;
+                mapEditor[i].addChild(tile);
+                
+                    
+                            
+                m_EventCore.register(tile, HitTest, onMapTileClick);            
+            }        
+        }   
     }
     
-    return map;
+    
+    return mapEditor;
 }
 
 //Hit test function
@@ -231,32 +240,27 @@ function onSaveClick() {
 
 //================================================================= Undo Button ==================================================================//
 function onCancelClick() {
-    //UndoTile();  
-    readFile();
     console.log("Cancel");   
 }
 
 //================================================================= Redo Button ==================================================================//
 function onRedoClick() {
-    readFile();
     console.log("Redo");
 }
 //================================================================= Map Tile Button ==================================================================//
 function onMapTileClick(tile)
 {
-    //m_MapData[tile.ownedRow][tile.ownedCol] ++;
-    //m_MapData[tile.ownedRow][tile.ownedCol] %= 2;
-    m_Map.layers[m_CurrentLayer][tile.ownedRow][tile.ownedCol] = m_CurrentTile;
+    m_Map.layers[m_CurrentLayer][tile.ownedCol][tile.ownedRow] = m_CurrentTile;
     tile.source = ASSETS_PATH + m_CurrentTile + ".png";
-    console.log(m_Map.layers[0][tile.ownedRow][tile.ownedCol]);
-    
- 
 }
 
 function onTilesetClick(tile)
 {
     m_CurrentTile = tile.id;    
 }
+
+//================================================================= UI Functions ==================================================================//
+
 /*
 function onTileClick(tile) {
      console.log(tile.ownedRow+" "+tile.ownedCol+" "+m_MapData[tile.ownedRow][tile.ownedCol]); 
@@ -279,14 +283,26 @@ function onCreateMap()
     
     var mapW = parseInt((<HTMLInputElement>document.getElementById("map-width")).value);
     var mapH = parseInt((<HTMLInputElement>document.getElementById("map-height")).value);
-    var mapName = (<HTMLInputElement>document.getElementById("map-name")).value;
     
-    var tileW = parseInt((<HTMLInputElement>document.getElementById("tile-width")).value);
-    var tileH = parseInt((<HTMLInputElement>document.getElementById("tile-height")).value);
-    
-    m_MapEditor = createNewMap(mapW, mapH, tileW, tileH, m_CurrentLayer);
-    
+    m_MapEditor = createNewMap(mapW, mapH);
+    //onLayerChange();
     Start();
+}
+
+function onLayerChange()
+{
+    m_CurrentLayer = (<HTMLSelectElement>document.getElementById("layer")).selectedIndex;
+    console.log(m_CurrentLayer);
+    for(var i = 0; i < NUM_LAYERS; i++)
+    {
+        if(i != m_CurrentLayer){
+            m_MapEditor[i].setOpacity(0.5);
+            m_MapEditor[i].setActive(false);
+        }else{
+            m_MapEditor[i].setOpacity(1);
+            m_MapEditor[i].setActive(true);
+        }
+    }
 }
 
 

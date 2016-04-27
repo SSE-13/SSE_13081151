@@ -14,6 +14,7 @@ var render;
         function DisplayObject() {
             this._width = 100;
             this._height = 100;
+            this._mouseEnabled = true;
             this.x = 0;
             this.y = 0;
             this.scaleX = 1;
@@ -37,6 +38,16 @@ var render;
             },
             set: function (value) {
                 this._height = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DisplayObject.prototype, "mouseEnabled", {
+            get: function () {
+                return this._mouseEnabled;
+            },
+            set: function (value) {
+                this._mouseEnabled = value;
             },
             enumerable: true,
             configurable: true
@@ -70,16 +81,27 @@ var render;
         function DisplayObjectContainer() {
             _super.call(this);
             this.children = [];
+            this.opacity = 1;
         }
         DisplayObjectContainer.prototype.addChild = function (child) {
             this.children.push(child);
             child.parent = this;
         };
         DisplayObjectContainer.prototype.render = function (context) {
+            context.globalAlpha = this.opacity;
             for (var i = 0; i < this.children.length; i++) {
                 var child = this.children[i];
                 child.draw(context);
             }
+            context.globalAlpha = 1;
+        };
+        DisplayObjectContainer.prototype.setOpacity = function (value) {
+            this.opacity = value;
+        };
+        DisplayObjectContainer.prototype.setActive = function (value) {
+            this.children.forEach(function (child) {
+                child.mouseEnabled = value;
+            });
         };
         return DisplayObjectContainer;
     }(DisplayObject));

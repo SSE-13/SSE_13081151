@@ -6,6 +6,8 @@ var data;
     data.MAP_EXTENSION = ".json";
     var Storage = (function () {
         function Storage(height, width, name) {
+            this.TILE_WIDTH = 32;
+            this.TILE_HEIGHT = 32;
             this.height = height;
             this.width = width;
             this.name = name;

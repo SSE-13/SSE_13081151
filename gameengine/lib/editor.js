@@ -9,10 +9,11 @@ var editor;
     editor.GRID_PIXEL_HEIGHT = 50;
     var WorldMap = (function (_super) {
         __extends(WorldMap, _super);
-        function WorldMap() {
+        function WorldMap(id) {
             _super.call(this);
             this.isDirty = true;
             this.cache = document.createElement("canvas");
+            this.cache.id = id;
             this.cache.width = 400;
             this.cache.height = 400;
         }
@@ -43,34 +44,6 @@ var editor;
         return Tile;
     }(render.Bitmap));
     editor.Tile = Tile;
-    /*
-        export class Tile extends render.Rect {
-    
-    
-            public ownedRow: number;
-            public ownedCol: number;
-            private walkable: boolean = true;
-    
-            constructor() {
-                super();
-            }
-    
-            public setWalkable(value) {
-                this.walkable = value;
-                this.color = value ? "#0000FF" : "#FF0000";
-            }
-            
-            public setImage(value)
-            {
-                
-            }
-            
-            public getWalkable()
-            {
-                return this.walkable;
-            }
-        }
-        */
     var ControlPanel = (function (_super) {
         __extends(ControlPanel, _super);
         function ControlPanel() {

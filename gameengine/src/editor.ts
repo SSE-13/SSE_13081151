@@ -10,20 +10,22 @@ module editor {
 
 
         private cache: HTMLCanvasElement;
+        
 
         public isDirty = true;
-        constructor() {
+        constructor(id) {
 
             super();
             this.cache = document.createElement("canvas");
+            this.cache.id = id;
             this.cache.width = 400;
             this.cache.height = 400;
-
+            
         }
 
         render(context: CanvasRenderingContext2D) {
             super.render(context);
-        }
+        }      
     }
 
     export class Tile extends render.Bitmap
@@ -38,7 +40,7 @@ module editor {
             super();
         }
         
-        public setWalkable(value) {
+        public setWalkable(value:boolean) {
             this.walkable = value;
         }
         
@@ -58,36 +60,7 @@ module editor {
             return this.walkable;    
         }
     }
-
-/*
-    export class Tile extends render.Rect {
-
-
-        public ownedRow: number;
-        public ownedCol: number;
-        private walkable: boolean = true;
-
-        constructor() {
-            super();
-        }
-
-        public setWalkable(value) {
-            this.walkable = value;
-            this.color = value ? "#0000FF" : "#FF0000";
-        }
         
-        public setImage(value)
-        {
-            
-        }
-        
-        public getWalkable()
-        {
-            return this.walkable;    
-        }
-    }
-    */
-    
     
     export class ControlPanel extends render.DisplayObjectContainer {
         

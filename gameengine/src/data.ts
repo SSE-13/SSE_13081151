@@ -11,7 +11,10 @@ module data {
         private static _instance: Storage;
         private static DEFAULT_WIDTH: number =5;
         private static DEFAULT_HEIGHT: number =5;
-                
+        
+        public TILE_WIDTH = 32;
+        public TILE_HEIGHT = 32;
+        
         private height: number;
         private width: number;
         private name: string;
