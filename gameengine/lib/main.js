@@ -3,6 +3,7 @@ var fs = require('fs');
 var ASSETS_PATH = __dirname + "\\assets\\";
 var SAVE_BTN_PATH = ASSETS_PATH + "Save.png";
 var CANCEL_BTN_PATH = ASSETS_PATH + "Cancel.png";
+var Redo_BTN_PATH = ASSETS_PATH + "Cancel.png"; //using the cancel pic temp
 var EMPTY_TILE_PATH = ASSETS_PATH + "0.png";
 var WATER_TILE_PATH = ASSETS_PATH + "1.png";
 var CRATE_TILE_PATH = ASSETS_PATH + "2.png";
@@ -30,6 +31,17 @@ var m_MapEditor;
 //Buttons
 var m_SaveBtn;
 var m_UndoBtn;
+var m_RedoBtn;
+var m_EmptyBtn; //*
+var m_WaterBtn;
+var m_CrateBtn;
+var m_Fence_F_Btn;
+var m_Fence_TL_Btn;
+var m_Fence_TR_Btn;
+var m_Fence_BL_Btn;
+var m_Fence_BR_Btn;
+var m_BridgeBtn;
+var m_GrassBtn;
 //Editor Elements
 var m_EventCore = events.EventCore.getInstance();
 m_EventCore.init();
@@ -49,6 +61,17 @@ function Start() {
     m_Stage.addChild(m_Panel);
     m_Stage.addChild(m_SaveBtn);
     m_Stage.addChild(m_UndoBtn);
+    m_Stage.addChild(m_RedoBtn);
+    m_Stage.addChild(m_EmptyBtn); //*
+    m_Stage.addChild(m_WaterBtn);
+    m_Stage.addChild(m_CrateBtn);
+    m_Stage.addChild(m_Fence_F_Btn);
+    m_Stage.addChild(m_Fence_TL_Btn);
+    m_Stage.addChild(m_Fence_TR_Btn);
+    m_Stage.addChild(m_Fence_BL_Btn);
+    m_Stage.addChild(m_Fence_BR_Btn);
+    m_Stage.addChild(m_BridgeBtn);
+    m_Stage.addChild(m_GrassBtn);
     m_RenderCore = new render.RenderCore();
     m_RenderCore.start(m_Stage);
     m_RenderCore.start(m_Stage, [SAVE_BTN_PATH, EMPTY_TILE_PATH, CANCEL_BTN_PATH, BRIDGE_TILE_PATH, CRATE_TILE_PATH, FENCE_BL_TILE_PATH, FENCE_BR_TILE_PATH, FENCE_F_TILE_PATH, FENCE_TL_TILE_PATH, FENCE_TR_TILE_PATH, GRASS_TILE_PATH]);
@@ -68,8 +91,96 @@ function InitUI() {
     m_UndoBtn.source = CANCEL_BTN_PATH;
     m_UndoBtn.x = 350;
     m_UndoBtn.y = 55;
+    //Redo Button
+    m_RedoBtn = new render.Bitmap();
+    m_RedoBtn.width = 50;
+    m_RedoBtn.height = 50;
+    m_RedoBtn.source = Redo_BTN_PATH;
+    m_RedoBtn.x = 350;
+    m_RedoBtn.y = 110;
+    //Empty button                           //*
+    m_EmptyBtn = new render.Bitmap();
+    m_EmptyBtn.width = 32;
+    m_EmptyBtn.height = 32;
+    m_EmptyBtn.source = EMPTY_TILE_PATH; //*
+    m_EmptyBtn.x = 500;
+    m_EmptyBtn.y = 0;
+    //Water button                           
+    m_WaterBtn = new render.Bitmap();
+    m_WaterBtn.width = 32;
+    m_WaterBtn.height = 32;
+    m_WaterBtn.source = WATER_TILE_PATH;
+    m_WaterBtn.x = 548;
+    m_WaterBtn.y = 0;
+    //Crate button                           
+    m_CrateBtn = new render.Bitmap();
+    m_CrateBtn.width = 32;
+    m_CrateBtn.height = 32;
+    m_CrateBtn.source = CRATE_TILE_PATH;
+    m_CrateBtn.x = 596;
+    m_CrateBtn.y = 0;
+    //Fence_F button                           
+    m_Fence_F_Btn = new render.Bitmap();
+    m_Fence_F_Btn.width = 32;
+    m_Fence_F_Btn.height = 32;
+    m_Fence_F_Btn.source = FENCE_F_TILE_PATH;
+    m_Fence_F_Btn.x = 500;
+    m_Fence_F_Btn.y = 48;
+    //m_Fence_TL button                           
+    m_Fence_TL_Btn = new render.Bitmap();
+    m_Fence_TL_Btn.width = 32;
+    m_Fence_TL_Btn.height = 32;
+    m_Fence_TL_Btn.source = FENCE_TL_TILE_PATH;
+    m_Fence_TL_Btn.x = 548;
+    m_Fence_TL_Btn.y = 48;
+    //m_Fence_TR button                           
+    m_Fence_TR_Btn = new render.Bitmap();
+    m_Fence_TR_Btn.width = 32;
+    m_Fence_TR_Btn.height = 32;
+    m_Fence_TR_Btn.source = FENCE_TR_TILE_PATH;
+    m_Fence_TR_Btn.x = 596;
+    m_Fence_TR_Btn.y = 48;
+    //m_Fence_BL button                           
+    m_Fence_BL_Btn = new render.Bitmap();
+    m_Fence_BL_Btn.width = 32;
+    m_Fence_BL_Btn.height = 32;
+    m_Fence_BL_Btn.source = FENCE_BL_TILE_PATH;
+    m_Fence_BL_Btn.x = 500;
+    m_Fence_BL_Btn.y = 96;
+    //m_Fence_BR button                           
+    m_Fence_BR_Btn = new render.Bitmap();
+    m_Fence_BR_Btn.width = 32;
+    m_Fence_BR_Btn.height = 32;
+    m_Fence_BR_Btn.source = FENCE_BR_TILE_PATH;
+    m_Fence_BR_Btn.x = 548;
+    m_Fence_BR_Btn.y = 96;
+    //Bridge button                           
+    m_BridgeBtn = new render.Bitmap();
+    m_BridgeBtn.width = 32;
+    m_BridgeBtn.height = 32;
+    m_BridgeBtn.source = BRIDGE_TILE_PATH;
+    m_BridgeBtn.x = 596;
+    m_BridgeBtn.y = 96;
+    //GRASS button                           
+    m_GrassBtn = new render.Bitmap();
+    m_GrassBtn.width = 32;
+    m_GrassBtn.height = 32;
+    m_GrassBtn.source = GRASS_TILE_PATH;
+    m_GrassBtn.x = 500;
+    m_GrassBtn.y = 144;
     m_EventCore.register(m_SaveBtn, HitTest, onSaveClick);
     m_EventCore.register(m_UndoBtn, HitTest, onCancelClick);
+    m_EventCore.register(m_RedoBtn, HitTest, onRedoClick);
+    m_EventCore.register(m_EmptyBtn, HitTest, onEmptyClick);
+    m_EventCore.register(m_BridgeBtn, HitTest, onBridegClick);
+    m_EventCore.register(m_CrateBtn, HitTest, onCrateClick);
+    m_EventCore.register(m_Fence_BL_Btn, HitTest, onFence_BL_Click);
+    m_EventCore.register(m_Fence_BR_Btn, HitTest, onFence_BR_Click);
+    m_EventCore.register(m_Fence_F_Btn, HitTest, onFence_F_Click);
+    m_EventCore.register(m_Fence_TL_Btn, HitTest, onFence_TL_Click);
+    m_EventCore.register(m_Fence_TR_Btn, HitTest, onFence_TR_Click);
+    m_EventCore.register(m_GrassBtn, HitTest, onGrassClick);
+    m_EventCore.register(m_WaterBtn, HitTest, onWaterClick);
 }
 //================================================================= Read Map File ==================================================================//
 function readFile() {
@@ -94,6 +205,22 @@ function UndoTile() {
         //m[new_row][new_col]= m_Undo[2][m_Undolength-1];
         m_Undolength--;
     }
+}
+//================================================================= Undo Operation ==================================================================//
+function RedoTile() {
+    if (m_Undolength <= 0) {
+        alert("Ended");
+        return;
+    }
+    else {
+        var new_row = m_Undo[0][m_Undolength + 1];
+        var new_col = m_Undo[1][m_Undolength + 1];
+        //m[new_row][new_col]= m_Undo[2][m_Undolength-1];
+        m_Undolength++;
+    }
+}
+//================================================================= Map pic Operation ==================================================================//
+function EmptyTile() {
 }
 //================================================================= Create New Map ==================================================================//
 function createNewMap(width, height, tileWidth, tileHeight, layerID) {
@@ -131,6 +258,43 @@ function onCancelClick() {
     //UndoTile();  
     readFile();
     console.log("Cancel");
+}
+//================================================================= Redo Button ==================================================================//
+function onRedoClick() {
+    //UndoTile();  
+    readFile();
+    console.log("Redo");
+}
+//================================================================= Map pic Button ==================================================================//
+function onEmptyClick(tile) {
+    tile.id = 0;
+}
+function onWaterClick(tile) {
+    tile.id = 1;
+}
+function onCrateClick(tile) {
+    tile.id = 2;
+}
+function onBridegClick(tile) {
+    tile.id = 3;
+}
+function onFence_F_Click(tile) {
+    tile.id = 4;
+}
+function onFence_TL_Click(tile) {
+    tile.id = 5;
+}
+function onFence_TR_Click(tile) {
+    tile.id = 6;
+}
+function onFence_BL_Click(tile) {
+    tile.id = 7;
+}
+function onFence_BR_Click(tile) {
+    tile.id = 8;
+}
+function onGrassClick(tile) {
+    tile.id = 9;
 }
 //================================================================= Map Tile Button ==================================================================//
 function onMapTileClick(tile) {
