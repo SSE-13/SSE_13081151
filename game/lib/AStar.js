@@ -43,7 +43,7 @@ var astar;
         };
         Grid.prototype.setWalkable = function (x, y, value) {
             this._nodes[x][y].walkable = value == 0 ? true : false;
-            console.log(this._nodes[x][y], this._nodes[x][y].walkable);
+            //  console.log(this._nodes[x][y],this._nodes[x][y].walkable);
         };
         Object.defineProperty(Grid.prototype, "startNode", {
             get: function () {

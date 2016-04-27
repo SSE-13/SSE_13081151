@@ -31,104 +31,23 @@ var editor;
         function Tile() {
             _super.call(this);
         }
-        Tile.prototype.SetBackground = function (value) {
-            this.source = "9.png";
-        };
-        Tile.prototype.setBarrier = function (value) {
-            this.source = value + ".png";
+        Tile.prototype.setImage = function (value) {
+            this.source = value;
         };
         return Tile;
     }(render.Bitmap));
     editor.Tile = Tile;
-    /*  export class BoyBody extends Body {
- 
-          m_point_x = new Array();
-          m_point_y = new Array();
-          m_speed = 2;
-          m_position = 0;
-          m_vx=0;
-          m_vy=0;
-         public m_Endx=0;
-         public m_Endy=0;
-         public m_Startx=0;
-         public m_Starty=0;
-         
-         public run(grid:astar.Grid) {
-             var storage = data.Storage.getInstance();
-             var layerData=storage.m_layer1;
-             var rows= layerData.length;
-             var cols= layerData[0].length;
-             for(var col =0;col<cols;col++){
-                 for(var row=0;row<cols;row++){
-                      grid.setWalkable(row,col,storage.m_layer1[row][col]);
-                 }
-             }
-             grid.setStartNode(this.m_Startx,this.m_Startx);
-             grid.setEndNode(this.m_Endx,this.m_Endy);
-             
-             var findpath = new astar.AStar();
-             findpath.setHeurisitic(findpath.diagonal);
-             var result = findpath.findPath(grid);
-             var path = findpath._path;
-             for(var i: number = 0; i < path.length; i++){
-             this.m_point_x[i] = path[i].x;
-             this.m_point_y[i] = path[i].y;
-             console.log( path[i].x,path[i].y);
- 
-         }
- 
-         }
-         
-         public SetEnd(x:number,y:number){
-             this.m_Endx=x;
-             this.m_Endy=y;
-         }
-          public SetStart(x:number,y:number){
-             this.m_Endx=x;
-             this.m_Endy=y;
-         }
-         
-         public onTicker(duringTime) {
-            if(this.m_position < this.m_point_y.length){
-                var m_dx=Math.abs(this.x - this.m_point_x[this.m_position+1] *GRID_PIXEL_WIDTH);
-                var m_dy=Math.abs(this.y - this.m_point_y[this.m_position+1] *GRID_PIXEL_WIDTH);
-                       
-                 if(m_dx<0.3 || m_dy<0.3){
-                     if(this.m_point_x[this.m_position+1]-this.m_point_x[this.m_position]>0){
-                         this.m_vx=this.m_speed;
-                     }else if(this.m_point_x[this.m_position+1]-this.m_point_x[this.m_position]<0){
-                         this.m_vx=this.m_speed*-1;
-                     }else if(this.m_point_x[this.m_position+1]-this.m_point_x[this.m_position]==0){
-                         this.m_vx=0;
-                     }
-                     if(this.m_point_y[this.m_position+1]-this.m_point_y[this.m_position]>0){
-                         this.m_vy=this.m_speed;
-                     }else if(this.m_point_y[this.m_position+1]-this.m_point_y[this.m_position]<0){
-                         this.m_vy=this.m_speed*-1;
-                     }else if(this.m_point_y[this.m_position+1]-this.m_point_y[this.m_position]==0){
-                         this.m_vy=0;
-                     }
-                     
-                     this.x += this.m_vx * duringTime ;
-                     this.y += this.m_vy * duringTime;
-                  }else{
-                     this.m_position++;
-                     console.log("m_position"+ this.m_position);
-                  }
-                
-             }
-            
-         }
-         
-  }*/
     var BoyBody = (function (_super) {
         __extends(BoyBody, _super);
         function BoyBody() {
             _super.apply(this, arguments);
-            this.point_x = new Array();
-            this.point_y = new Array();
-            this.speed = 5;
-            this.posi = 0;
+            this.m_point_x = new Array();
+            this.m_point_y = new Array();
+            this.m_speed = 1;
+            this.t = 1;
+            this.m_dx = 0;
+            this.m_dy = 0;
+            this.m_position = 0;
             this.m_Endx = 0;
             this.m_Endy = 0;
             this.m_Startx = 0;
@@ -139,8 +58,8 @@ var editor;
             this.m_Endy = y;
         };
         BoyBody.prototype.SetStart = function (x, y) {
-            this.m_Endx = x;
-            this.m_Endy = y;
+            this.m_Startx = x;
+            this.m_Starty = y;
         };
         BoyBody.prototype.run = function (grid) {
             grid.setStartNode(this.m_Startx, this.m_Startx);
@@ -149,16 +68,43 @@ var editor;
             findpath.setHeurisitic(findpath.diagonal);
             var result = findpath.findPath(grid);
             var path = findpath._path;
+            if (path == null)
+                return;
             for (var i = 0; i < path.length; i++) {
-                this.point_x[i] = path[i].x;
-                this.point_y[i] = path[i].y;
+                this.m_point_x[i] = path[i].x;
+                this.m_point_y[i] = path[i].y;
+                console.log(this.m_point_x[i], this.m_point_y[i]);
             }
-            console.log(this.m_Startx, this.m_Startx);
-            console.log(this.m_Endx, this.m_Endy);
-            console.log(path);
         };
         BoyBody.prototype.onTicker = function (duringTime) {
-            // console.log("********************");
+            if (this.x >= 0 && this.x <= NUM_ROWS * editor.GRID_PIXEL_WIDTH && this.y >= 0 && this.y <= NUM_COLS * editor.GRID_PIXEL_HEIGHT) {
+                if (this.m_position <= this.m_point_y.length) {
+                    this.m_dx = (this.m_point_x[this.m_position + 1] - this.m_point_x[this.m_position]);
+                    this.m_dy = (this.m_point_y[this.m_position + 1] - this.m_point_y[this.m_position]);
+                    var distance = Math.sqrt(this.m_dx * this.m_dx + this.m_dy * this.m_dy);
+                    this.t = distance / this.m_speed;
+                    if (this.m_dx > 0) {
+                        this.vx = this.t * this.m_speed;
+                    }
+                    else {
+                        this.vx = this.t * this.m_speed * -1;
+                    }
+                    if (this.m_dy > 0) {
+                        this.vy = this.t * this.m_speed;
+                    }
+                    else {
+                        this.vy = this.t * this.m_speed * -1;
+                    }
+                    console.log(distance);
+                    if (distance > 1) {
+                        this.x += this.vx * duringTime;
+                        this.y += this.vy * duringTime;
+                    }
+                    else {
+                        this.m_position += 1;
+                    }
+                }
+            }
         };
         return BoyBody;
     }(Body));

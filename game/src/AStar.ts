@@ -67,7 +67,7 @@ module astar {
 
         public setWalkable(x, y, value): void {
             this._nodes[x][y].walkable = value == 0 ? true : false ;
-            console.log(this._nodes[x][y],this._nodes[x][y].walkable);
+          //  console.log(this._nodes[x][y],this._nodes[x][y].walkable);
         }
 
         public get startNode(): Node {
