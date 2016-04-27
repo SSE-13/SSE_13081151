@@ -33,6 +33,7 @@ module editor {
         render(context: CanvasRenderingContext2D) {
             super.render(context);
         }
+    
     }
 
 
@@ -51,13 +52,15 @@ module editor {
         this.source="9.png";
     }
     
-     public setWalkable(value:number) {
+     public setBarrier(value:number) {
          this.source = value + ".png";
      }
-    }
+     
+   }
+  
     
     
-     export class BoyBody extends Body {
+   /*  export class BoyBody extends Body {
 
          m_point_x = new Array();
          m_point_y = new Array();
@@ -71,11 +74,20 @@ module editor {
         public m_Starty=0;
         
         public run(grid:astar.Grid) {
+            var storage = data.Storage.getInstance();
+            var layerData=storage.m_layer1;
+            var rows= layerData.length;
+            var cols= layerData[0].length;
+            for(var col =0;col<cols;col++){
+                for(var row=0;row<cols;row++){
+                     grid.setWalkable(row,col,storage.m_layer1[row][col]);
+                }
+            }
             grid.setStartNode(this.m_Startx,this.m_Startx);
             grid.setEndNode(this.m_Endx,this.m_Endy);
             
             var findpath = new astar.AStar();
-            findpath.setHeurisitic(findpath.manhattan);
+            findpath.setHeurisitic(findpath.diagonal);
             var result = findpath.findPath(grid);
             var path = findpath._path;
             for(var i: number = 0; i < path.length; i++){
@@ -121,12 +133,68 @@ module editor {
                     this.y += this.m_vy * duringTime;
                  }else{
                     this.m_position++;
-                    console.log("position"+ this.m_position);
+                    console.log("m_position"+ this.m_position);
                  }
                
             }
+           
         }
- }
+        
+ }*/
+ export class BoyBody extends Body {
+        
+         m_point_x = new Array();
+         m_point_y = new Array();
+         m_speed = 5;  
+         t;
+         m_dx;
+         m_dy;
+         m_position = 0;
+         public m_Endx=0;
+         public m_Endy=0;
+         public m_Startx=0;
+         public m_Starty=0;
+        
+          public SetEnd(x:number,y:number){
+            this.m_Endx=x;
+            this.m_Endy=y;         
+        } 
+         public SetStart(x:number,y:number){
+            this.m_Endx=x;
+            this.m_Endy=y;         
+        }
+        public run(grid) {
+            grid.setStartNode(this.m_Startx,this.m_Startx);
+            grid.setEndNode(this.m_Endx,this.m_Endy);
+            var findpath = new astar.AStar();
+            findpath.setHeurisitic(findpath.diagonal);
+            var result = findpath.findPath(grid);
+            var path = findpath._path;
+           
+            for(var i: number = 0; i < path.length; i++){
+            this.m_point_x[i] = path[i].x;
+            this.m_point_y[i] = path[i].y;
+        }
+        console.log(this.m_Startx,this.m_Startx);
+        console.log(this.m_Endx,this.m_Endy);
+        console.log(path);
+     }
+
+        public onTicker(duringTime) {
+           if(this.m_position < this.m_point_x.length){
+                this.m_dx = (this.m_point_x[this.m_position+1]-this.m_point_x[this.m_position]);
+                this.m_dy = (this.m_point_y[this.m_position+1]-this.m_point_y[this.m_position]);
+                this.t = Math.sqrt(this.m_dx*this.m_dx + this.m_dy*this.m_dy)/this.m_speed;
+                this.vx = this.m_dx/this.t;
+                this.vy = this.m_dy/this.t;
+                
+           }
+           
+           
+           
+        }
+        
+    }
     export class ControlPanel extends render.DisplayObjectContainer {
         
         constructor(){

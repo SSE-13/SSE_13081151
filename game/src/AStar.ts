@@ -13,8 +13,9 @@ module astar {
         costMultiplier: number = 1.0;
         visited: Boolean = false;
         inPath: Boolean = false;
-
+        
         constructor(x: number, y: number) {
+  
             this.x = x;
             this.y = y;
         }
@@ -46,8 +47,10 @@ module astar {
                 this._nodes[i] = [];
                 for (var j: number = 0; j < this._numRows; j++) {
                     this._nodes[i][j] = new Node(i, j);
+
                 }
             }
+           
         }
 
         public getNode(x: number, y: number): Node {
@@ -63,7 +66,8 @@ module astar {
         }
 
         public setWalkable(x, y, value): void {
-            this._nodes[x][y].walkable = value;
+            this._nodes[x][y].walkable = value == 0 ? true : false ;
+            console.log(this._nodes[x][y],this._nodes[x][y].walkable);
         }
 
         public get startNode(): Node {
@@ -182,6 +186,7 @@ module astar {
 
 
         public findPath(grid: Grid): Boolean {
+           
             this._grid = grid;
             this._open = new Array();
             this._closed = new Array();
@@ -190,6 +195,7 @@ module astar {
             this._startNode.g = 0;
             this._startNode.h = this._heuristic(this._startNode);
             this._startNode.f = this._startNode.g + this._startNode.h;
+            
             return this.search();
         }
 
