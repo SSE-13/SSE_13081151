@@ -100,8 +100,7 @@ module data {
             }
             
             json += "\"collisionLayer\":" + JSON.stringify(this.layers[this.COLLISION_LAYER]) + "}"
-            */
-            
+            */            
             console.log(map_path);
             console.log(json);
             fs.writeFileSync(map_path,json,"utf-8");
