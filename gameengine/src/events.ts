@@ -49,7 +49,7 @@ module events {
                 var invertGlobalMatrix = math.invertMatrix(globalMatrix);
                 var newPoint = math.pointAppendMatrix(stageClickedPoint, invertGlobalMatrix);
                 //如果检测返回true，则认为点中了
-                if (info.hitTest(newPoint, info.displayObject)) {
+                if (info.displayObject.mouseEnabled && info.hitTest(newPoint, info.displayObject)) {
                     info.onClick(info.displayObject);
                     break;
                 }
@@ -65,7 +65,22 @@ module events {
 
         register(displayObject: render.DisplayObject, hitTest: (localPoint: math.Point, displayObject: render.DisplayObject) => Boolean, onClick: (displayObject: render.DisplayObject) => void) {
             this.eventInfos.push({ displayObject, hitTest, onClick });
+            //this.eventInfos.unshift({ displayObject, hitTest, onClick });
 
+        }
+        
+        unregister(displayObject)
+        {
+            var index = -1;
+            this.eventInfos.forEach(element => {
+                if (element.displayObject == displayObject){
+                    index = this.eventInfos.indexOf(element);
+                }
+            });
+            
+            if (index != -1){
+                this.eventInfos.splice(index);
+            }
         }
 
     }

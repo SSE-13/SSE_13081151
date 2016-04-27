@@ -42,7 +42,8 @@ var astar;
             this._endNode = this._nodes[x][y];
         };
         Grid.prototype.setWalkable = function (x, y, value) {
-            this._nodes[x][y].walkable = value;
+            this._nodes[x][y].walkable = value == 0 ? true : false;
+            //  console.log(this._nodes[x][y],this._nodes[x][y].walkable);
         };
         Object.defineProperty(Grid.prototype, "startNode", {
             get: function () {
@@ -72,38 +73,36 @@ var astar;
             enumerable: true,
             configurable: true
         });
+        /*
+                public getNeighbors(node: Node): Array<Node> {
+                    var result = [];
+                    var startX: number = Math.max(0, node.x - 1);
+                    var endX: number = Math.min(this.numCols - 1, node.x + 1);
+                    var startY: number = Math.max(0, node.y - 1);
+                    var endY: number = Math.min(this.numRows - 1, node.y + 1);
+         
+                    if(){
+                           result.push(this.getNode(startX + 1, node.y));
+                            result.push(this.getNode(startX -1, node.y));
+                            result.push(this.getNode(startX, node.y + 1));
+                            result.push(this.getNode(startX, node.y - 1));
+                    }
+                    return result;
+                }
+                */
         Grid.prototype.getNeighbors = function (node) {
             var result = [];
             var startX = Math.max(0, node.x - 1);
             var endX = Math.min(this.numCols - 1, node.x + 1);
             var startY = Math.max(0, node.y - 1);
             var endY = Math.min(this.numRows - 1, node.y + 1);
-            //   for (var i: number = startX; i <= endX; i++) {
-            //       for (var j: number = startY; j <= endY; j++) {
-            //  if(){
-            //         result.push(this.getNode(startX + 1, node.y));
-            //         result.push(this.getNode(startX -1, node.y));
-            //        result.push(this.getNode(startX, node.y + 1));
-            //         result.push(this.getNode(startX, node.y - 1));
-            //  }
-            //      }
-            //   }
+            for (var i = startX; i <= endX; i++) {
+                for (var j = startY; j <= endY; j++) {
+                    result.push(this.getNode(i, j));
+                }
+            }
             return result;
         };
-        /*   public getNeighbors(node: Node): Array<Node> {
-               var result = [];
-               var startX: number = Math.max(0, node.x - 1);
-               var endX: number = Math.min(this.numCols - 1, node.x + 1);
-               var startY: number = Math.max(0, node.y - 1);
-               var endY: number = Math.min(this.numRows - 1, node.y + 1);
-               for (var i: number = startX; i <= endX; i++) {
-                   for (var j: number = startY; j <= endY; j++) {
-                       result.push(this.getNode(i, j));
-                   }
-               }
-               return result;
-           }
-   */
         Grid.prototype.toString = function () {
             var result = "";
             for (var y = 0; y < this._numRows; y++) {

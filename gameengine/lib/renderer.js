@@ -14,6 +14,7 @@ var render;
         function DisplayObject() {
             this._width = 100;
             this._height = 100;
+            this._mouseEnabled = true;
             this.x = 0;
             this.y = 0;
             this.scaleX = 1;
@@ -41,12 +42,23 @@ var render;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(DisplayObject.prototype, "mouseEnabled", {
+            get: function () {
+                return this._mouseEnabled;
+            },
+            set: function (value) {
+                this._mouseEnabled = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
         DisplayObject.prototype.getLocalMatrix = function () {
             var localMatrix = new math.Matrix();
             localMatrix.updateFromDisplayObject(this.x, this.y, this.scaleX, this.scaleY, this.rotation);
             return localMatrix;
         };
         DisplayObject.prototype.draw = function (context) {
+            context.globalAlpha = this.opacity;
             var parent = this.parent;
             var localMatrix = this.getLocalMatrix();
             if (!parent) {
@@ -62,6 +74,9 @@ var render;
         };
         DisplayObject.prototype.render = function (context) {
         };
+        DisplayObject.prototype.setOpacity = function (value) {
+            this.opacity = value;
+        };
         return DisplayObject;
     }());
     render.DisplayObject = DisplayObject;
@@ -70,16 +85,32 @@ var render;
         function DisplayObjectContainer() {
             _super.call(this);
             this.children = [];
+            this.opacity = 1;
         }
         DisplayObjectContainer.prototype.addChild = function (child) {
             this.children.push(child);
             child.parent = this;
         };
         DisplayObjectContainer.prototype.render = function (context) {
+            context.globalAlpha = this.opacity;
             for (var i = 0; i < this.children.length; i++) {
                 var child = this.children[i];
                 child.draw(context);
             }
+            context.globalAlpha = 1;
+        };
+        DisplayObjectContainer.prototype.setActive = function (value) {
+            this.children.forEach(function (child) {
+                child.mouseEnabled = value;
+            });
+        };
+        DisplayObjectContainer.prototype.setOpacity = function (value) {
+            this.children.forEach(function (child) {
+                child.setOpacity(value);
+            });
+        };
+        DisplayObjectContainer.prototype.getChild = function (col, row, width) {
+            return this.children[row * width + col];
         };
         return DisplayObjectContainer;
     }(DisplayObject));

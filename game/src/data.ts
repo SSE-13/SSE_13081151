@@ -1,12 +1,14 @@
-//var fs = require("fs");
 
 module data {
 
     export class Storage {
 
         private static _instance: Storage;
-        public m_layer0;
-        public m_layer1;
+        public m_Height:number;
+        public m_Width:number;
+        public m_Num_Layers:number;
+        public m_Layers;
+        public m_CollisionLayer:number; 
         
         public static getInstance(): Storage {
             if (Storage._instance == null) {
@@ -22,10 +24,18 @@ module data {
             m_jsonfile.onreadystatechange = function() {
                 if (m_jsonfile.readyState == 4 && m_jsonfile.status == 200) {  
                     
-                      var _Layer = JSON.parse(m_jsonfile.responseText);
-                      Storage._instance.m_layer0 = _Layer.layer0;
-                      Storage._instance.m_layer1 = _Layer.layer1;
-    
+                      var obj = JSON.parse(m_jsonfile.responseText);
+                      
+                      Storage._instance.m_Height = obj.height;
+                      Storage._instance.m_Width = obj.width;
+                      Storage._instance.m_Num_Layers = obj.layers.length;
+                      Storage._instance.m_CollisionLayer = obj.layers.length-1;
+                      
+                      Storage._instance.m_Layers = new Array(Storage._instance.m_Num_Layers);
+                      
+                      for(var i = 0; i< obj.layers.length; i++){
+                         Storage._instance.m_Layers[i] = obj.layers[i];
+                      }
                       callback();
                
                 }

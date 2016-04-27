@@ -15,6 +15,10 @@ module render {
 
         protected _width = 100
         protected _height = 100;
+        protected _mouseEnabled = true;
+        
+        protected opacity: number;
+        
 
         public get width(): number {
             return this._width;
@@ -30,6 +34,16 @@ module render {
 
         public set height(value: number) {
             this._height = value;
+        }
+        
+        public get mouseEnabled()
+        {
+            return this._mouseEnabled;
+        }
+        
+        public set mouseEnabled(value: boolean)
+        {
+            this._mouseEnabled = value;
         }
 
 
@@ -57,7 +71,8 @@ module render {
         }
 
         draw(context: CanvasRenderingContext2D) {
-
+            
+            context.globalAlpha = this.opacity;
             var parent = this.parent;
             var localMatrix = this.getLocalMatrix();
             if (!parent) {
@@ -82,7 +97,12 @@ module render {
         }
 
         render(context: CanvasRenderingContext2D) {
-
+            
+        }
+        
+        public setOpacity(value:number)
+        {
+            this.opacity = value;
         }
     }
 
@@ -90,32 +110,58 @@ module render {
 
 
         children: Array<DisplayObject>
+        context;
 
         constructor() {
             super();
             this.children = [];
+            this.opacity = 1;
         }
 
         addChild(child: DisplayObject) {
             this.children.push(child);
             child.parent = this;
         }
+        
 
         render(context) {
+            context.globalAlpha = this.opacity;
+            
             for (var i = 0; i < this.children.length; i++) {
                 var child = this.children[i];
                 child.draw(context);
             }
+            
+            context.globalAlpha = 1;
         }
+        
+        public setActive(value:boolean)
+        {
+            this.children.forEach(child => {
+                child.mouseEnabled = value
+            });
+        }
+        
+        public setOpacity(value:number)
+        {
+            this.children.forEach(child => {
+                child.setOpacity(value);
+                
+            });
+        }
+        
+        public getChild(col:number, row:number, width:number)
+        {
+            return this.children[row * width + col];
+        }       
+        
     }
 
     export class Bitmap extends DisplayObject {
 
-
         source;
 
         render(context: CanvasRenderingContext2D) {
-
             var image = imagePool[this.source];
             if (image) {
                 context.drawImage(image, 0, 0);
