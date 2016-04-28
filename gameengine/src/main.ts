@@ -8,15 +8,6 @@ const CANCEL_BTN_PATH = ASSETS_PATH + "Cancel.png";
 const COLLISION_TILE_PATH = ASSETS_PATH + "x.png";
 const REDO_BTN_PATH = ASSETS_PATH + "Redo.png";
 const EMPTY_TILE_PATH = ASSETS_PATH + "0.png";
-const WATER_TILE_PATH = ASSETS_PATH + "1.png";
-const CRATE_TILE_PATH = ASSETS_PATH + "2.png";
-const FENCE_F_TILE_PATH = ASSETS_PATH + "3.png";
-const FENCE_TL_TILE_PATH = ASSETS_PATH + "4.png";
-const FENCE_TR_TILE_PATH = ASSETS_PATH + "5.png";
-const FENCE_BL_TILE_PATH = ASSETS_PATH + "6.png";
-const FENCE_BR_TILE_PATH = ASSETS_PATH + "7.png";
-const BRIDGE_TILE_PATH = ASSETS_PATH + "8.png";
-const GRASS_TILE_PATH = ASSETS_PATH + "9.png";
 
 const TILESET_PATH = ASSETS_PATH + "tileset_01.png"
 
@@ -25,7 +16,7 @@ var m_Undo = new Array(4);
 var m_CurrentTile:editor.Tile = new editor.Tile(0, 0, 0, 0, 0, 0, 0, 0, false, true);
 var m_PreviousTile:editor.Tile;
 var m_CurrentLayer = 0;
-
+var m_tilesetName = "tileset_01.png";
 //var m_RecordTile =  new editor.Tile;
 
 for(var i=0;i<3;i++)
@@ -81,7 +72,7 @@ function Start()
     
     m_RenderCore = new render.RenderCore();
     m_RenderCore.start(m_Stage);
-    m_RenderCore.start(m_Stage, [TILESET_PATH, SAVE_BTN_PATH, EMPTY_TILE_PATH, WATER_TILE_PATH, REDO_BTN_PATH, CANCEL_BTN_PATH, BRIDGE_TILE_PATH, CRATE_TILE_PATH, FENCE_BL_TILE_PATH, FENCE_BR_TILE_PATH, FENCE_F_TILE_PATH, FENCE_TL_TILE_PATH, FENCE_TR_TILE_PATH, GRASS_TILE_PATH, COLLISION_TILE_PATH]);
+    m_RenderCore.start(m_Stage, [TILESET_PATH, SAVE_BTN_PATH, EMPTY_TILE_PATH, REDO_BTN_PATH, CANCEL_BTN_PATH, COLLISION_TILE_PATH]);
 }
 
 
@@ -124,7 +115,7 @@ function CreateTileset()
     m_Container = new render.DisplayObjectContainer();
     m_Container.x = 600;
     
-    m_Tileset = new editor.Tileset(0, TILESET_PATH, 32, 32, 256, 2560);
+    m_Tileset = new editor.Tileset(0, m_tilesetName, 32, 32, 256, 2560);
     m_Container.addChild(m_Tileset);
 
     for(var row = 0; row < m_Tileset.numRows; row++)

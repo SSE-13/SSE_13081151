@@ -97,10 +97,11 @@ var editor;
     editor.Tile = Tile;
     var Tileset = (function (_super) {
         __extends(Tileset, _super);
-        function Tileset(firstID, source, tileW, tileH, imageW, imageH) {
+        function Tileset(firstID, filename, tileW, tileH, imageW, imageH) {
             _super.call(this);
             this.strokeColor = "#000000";
-            this.source = source;
+            this.filename = filename;
+            this.source = __dirname + "\\assets\\" + filename;
             this.firstID = firstID;
             this.imageHeight = imageH;
             this.imageWidth = imageW;
@@ -118,30 +119,15 @@ var editor;
                     var x = col * this.tileWidth;
                     var y = row * this.tileHeight;
                     this.tiles[row][col] = new Tile(id++, row, col, this.tileWidth, this.tileHeight, this.source, x, y, false);
+                    var tile = this.tiles[row][col];
+                    var sy = Math.floor(tile.id / this.numCols);
+                    var sx = tile.id - (this.numCols * sy);
+                    tile.sy = sy;
+                    tile.sx = sx;
+                    this.addChild(tile);
                 }
             }
         }
-        Tileset.prototype.render = function (context) {
-            var image = render.getImage(this.source);
-            if (image) {
-                for (var row = 0; row < this.numRows; row++) {
-                    for (var col = 0; col < this.numCols; col++) {
-                        var tile = this.tiles[row][col];
-                        var sy = Math.floor(tile.id / this.numCols);
-                        var sx = tile.id - (this.numCols * sy);
-                        tile.sy = sy;
-                        tile.sx = sx;
-                        tile.draw(context);
-                        this.addChild(tile);
-                    }
-                }
-            }
-            else {
-                context.font = "14px Arial";
-                context.fillStyle = '#000000';
-                context.fillText('Invalid image URL', 0, 20);
-            }
-        };
         return Tileset;
     }(render.DisplayObjectContainer));
     editor.Tileset = Tileset;

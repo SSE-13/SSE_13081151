@@ -6,7 +6,7 @@ module data {
         private static _instance: Storage;
         public m_Height:number;
         public m_Width:number;
-        public m_Num_Layers:number;
+        public m_NumLayers:number;
         public m_Layers;
         public m_CollisionLayer:number; 
         
@@ -28,12 +28,11 @@ module data {
                       
                       Storage._instance.m_Height = obj.height;
                       Storage._instance.m_Width = obj.width;
-                      Storage._instance.m_Num_Layers = obj.layers.length;
-                      Storage._instance.m_CollisionLayer = obj.layers.length-1;
-                      
-                      Storage._instance.m_Layers = new Array(Storage._instance.m_Num_Layers);
-                      
-                      for(var i = 0; i< obj.layers.length; i++){
+                      Storage._instance.m_NumLayers = obj.numLayers;
+                      Storage._instance.m_CollisionLayer = obj.numLayers-1;
+ 
+                      Storage._instance.m_Layers = new Array(Storage._instance.m_NumLayers);
+                      for(var i = 0; i< obj.numLayers; i++){
                          Storage._instance.m_Layers[i] = obj.layers[i];
                       }
                       callback();

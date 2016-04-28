@@ -124,6 +124,7 @@ module editor {
     {
         public tiles: Array<Array<Tile>>;
         public source:string;
+        public filename:string;
         public tileWidth:number;
         public tileHeight:number;
         public imageWidth:number;
@@ -135,10 +136,11 @@ module editor {
         
         strokeColor = "#000000"
         
-        constructor(firstID, source, tileW, tileH, imageW, imageH)
+        constructor(firstID, filename, tileW, tileH, imageW, imageH)
         {
             super();
-            this.source = source;
+            this.filename = filename;
+            this.source = __dirname + "\\assets\\" + filename;
             this.firstID = firstID;
             this.imageHeight = imageH;
             this.imageWidth = imageW;
@@ -158,28 +160,34 @@ module editor {
                 {
                     var x = col * this.tileWidth;
                     var y = row * this.tileHeight;
+                    
                     this.tiles[row][col] = new Tile(id++, row, col, this.tileWidth, this.tileHeight, this.source, x, y, false);
+                    
+                    var tile = this.tiles[row][col]; 
+                    var sy =   Math.floor(tile.id / this.numCols) ;
+                    var sx =   tile.id - (this.numCols * sy);
+                    
+                    tile.sy = sy; 
+                    tile.sx = sx;
+                    this.addChild(tile);
+                    
                 }
             } 
         }
-        
+        /*
         render(context:CanvasRenderingContext2D)
         {
-            var image = render.getImage(this.source);
+            super();
+            /*var image = render.getImage(this.source);
             if(image)
             {
                 for(var row = 0; row < this.numRows; row++){
                     for(var col = 0; col < this.numCols; col++)
                     {
-                        var tile = this.tiles[row][col]; 
-                        var sy =   Math.floor(tile.id / this.numCols) ;
-                        var sx =   tile.id - (this.numCols * sy);
                         
-                        tile.sy = sy; 
-                        tile.sx = sx;
                         
-                        tile.draw(context);
-                        this.addChild(tile);
+                        this.tiles[row][col].draw(context);
+                        
                     }
                 }                
             }else
@@ -189,7 +197,7 @@ module editor {
                 context.fillText('Invalid image URL', 0, 20);
             }
             
-        }
+        }*/
     }
     
     export class ControlPanel extends render.DisplayObjectContainer {
