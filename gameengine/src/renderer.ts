@@ -110,7 +110,6 @@ module render {
 
 
         children: Array<DisplayObject>
-        context;
 
         constructor() {
             super();
@@ -172,7 +171,6 @@ module render {
                 context.fillText('错误的URL', 0, 20);
             }
         }
-
     }
 
     export class Rect extends DisplayObject {
@@ -221,6 +219,11 @@ module render {
 
 
     var imagePool = {};
+    
+    export function getImage(source:string)
+    {
+        return imagePool[source];
+    }
 
     function loadResource(imageList, callback) {
         var count = 0;
@@ -247,6 +250,8 @@ module render {
             }
         })
     }
+    
+    
 
 
 

@@ -19,6 +19,7 @@ module data {
         private height: number;
         private width: number;
         private name: string;
+        private _tileset: editor.Tileset;
         
         public layers;
 
@@ -52,6 +53,11 @@ module data {
         public get NumLayers()
         {
             return NUM_LAYERS;
+        }
+        
+        public set tileset(value)
+        {
+            this._tileset = value;
         }
         
         constructor(height, width, name)
@@ -91,7 +97,9 @@ module data {
             var map_path = ASSETS_PATH + this.name + MAP_EXTENSION;
             var json="{\"height\":" + JSON.stringify(this.height) + ","
                       +"\"width\":" + JSON.stringify(this.width) + ","
-                      +"\"layers\"" + JSON.stringify(this.layers) + "}";
+                      +"\"numLayers\":" + JSON.stringify(this.NumLayers) + ","
+                      +"\"tileset\":" + JSON.stringify(this.tileset) + ","
+                      +"\"layers\":" + JSON.stringify(this.layers) + "}";
                       
             /*for(var i = 0; i < NUM_LAYERS-1; i++)
             {
@@ -99,8 +107,7 @@ module data {
             }
             
             json += "\"collisionLayer\":" + JSON.stringify(this.layers[this.COLLISION_LAYER]) + "}"
-            */
-            
+            */            
             console.log(map_path);
             console.log(json);
             fs.writeFileSync(map_path,json,"utf-8");
