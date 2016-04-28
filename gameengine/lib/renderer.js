@@ -179,6 +179,10 @@ var render;
     }(DisplayObject));
     render.TextField = TextField;
     var imagePool = {};
+    function getImage(source) {
+        return imagePool[source];
+    }
+    render.getImage = getImage;
     function loadResource(imageList, callback) {
         var count = 0;
         if (imageList.length == 0) {

@@ -56,6 +56,12 @@ var data;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Storage.prototype, "tileset", {
+            set: function () {
+            },
+            enumerable: true,
+            configurable: true
+        });
         Storage.prototype.readFile = function () {
             var map_path = data.ASSETS_PATH + this.name + data.MAP_EXTENSION;
             var content = fs.readFileSync(map_path, "utf-8");
@@ -72,6 +78,7 @@ var data;
             var json = "{\"height\":" + JSON.stringify(this.height) + ","
                 + "\"width\":" + JSON.stringify(this.width) + ","
                 + "\"numLayers\":" + JSON.stringify(this.NumLayers) + ","
+                + "\"tileset\":" + JSON.stringify(this.tileset) + ","
                 + "\"layers\":" + JSON.stringify(this.layers) + "}";
             /*for(var i = 0; i < NUM_LAYERS-1; i++)
             {
