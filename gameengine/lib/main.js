@@ -5,21 +5,13 @@ var CANCEL_BTN_PATH = ASSETS_PATH + "Cancel.png";
 var COLLISION_TILE_PATH = ASSETS_PATH + "x.png";
 var REDO_BTN_PATH = ASSETS_PATH + "Redo.png";
 var EMPTY_TILE_PATH = ASSETS_PATH + "0.png";
-var WATER_TILE_PATH = ASSETS_PATH + "1.png";
-var CRATE_TILE_PATH = ASSETS_PATH + "2.png";
-var FENCE_F_TILE_PATH = ASSETS_PATH + "3.png";
-var FENCE_TL_TILE_PATH = ASSETS_PATH + "4.png";
-var FENCE_TR_TILE_PATH = ASSETS_PATH + "5.png";
-var FENCE_BL_TILE_PATH = ASSETS_PATH + "6.png";
-var FENCE_BR_TILE_PATH = ASSETS_PATH + "7.png";
-var BRIDGE_TILE_PATH = ASSETS_PATH + "8.png";
-var GRASS_TILE_PATH = ASSETS_PATH + "9.png";
 var TILESET_PATH = ASSETS_PATH + "tileset_01.png";
 var m_Undolength = 0;
 var m_Undo = new Array(4);
 var m_CurrentTile = new editor.Tile(0, 0, 0, 0, 0, 0, 0, 0, false, true);
 var m_PreviousTile;
 var m_CurrentLayer = 0;
+var m_tilesetName = "tileset_01.png";
 //var m_RecordTile =  new editor.Tile;
 for (var i = 0; i < 3; i++) {
     m_Undo[i] = new Array();
@@ -51,6 +43,7 @@ function Start() {
     m_Panel.x = 300;
     InitUI();
     CreateTileset();
+    m_Map.tileset = m_Tileset;
     m_Stage = new render.DisplayObjectContainer();
     for (var i = 0; i < m_Map.NumLayers; i++)
         m_Stage.addChild(m_MapEditor[i]);
@@ -61,7 +54,7 @@ function Start() {
     m_Stage.addChild(m_Container);
     m_RenderCore = new render.RenderCore();
     m_RenderCore.start(m_Stage);
-    m_RenderCore.start(m_Stage, [TILESET_PATH, SAVE_BTN_PATH, EMPTY_TILE_PATH, WATER_TILE_PATH, REDO_BTN_PATH, CANCEL_BTN_PATH, BRIDGE_TILE_PATH, CRATE_TILE_PATH, FENCE_BL_TILE_PATH, FENCE_BR_TILE_PATH, FENCE_F_TILE_PATH, FENCE_TL_TILE_PATH, FENCE_TR_TILE_PATH, GRASS_TILE_PATH, COLLISION_TILE_PATH]);
+    m_RenderCore.start(m_Stage, [TILESET_PATH, SAVE_BTN_PATH, EMPTY_TILE_PATH, REDO_BTN_PATH, CANCEL_BTN_PATH, COLLISION_TILE_PATH]);
 }
 //UI Elements initialization
 function InitUI() {
@@ -93,7 +86,7 @@ function InitUI() {
 function CreateTileset() {
     m_Container = new render.DisplayObjectContainer();
     m_Container.x = 600;
-    m_Tileset = new editor.Tileset(0, TILESET_PATH, 32, 32, 256, 2560);
+    m_Tileset = new editor.Tileset(0, m_tilesetName, 32, 32, 256, 2560);
     m_Container.addChild(m_Tileset);
     for (var row = 0; row < m_Tileset.numRows; row++) {
         for (var col = 0; col < m_Tileset.numCols; col++) {
@@ -170,10 +163,8 @@ function onMapTileClick(tile) {
     if (m_CurrentLayer != m_Map.COLLISION_LAYER) {
         m_Map.layers[m_CurrentLayer][tile.ownedRow][tile.ownedCol] = m_CurrentTile.id;
         tile.setTileAttributes(m_CurrentTile);
-        console.log(tile);
     }
     else {
-        console.log(tile);
         tile.setWalkable(!tile.getWalkable());
         tile.source = tile.getWalkable() ? EMPTY_TILE_PATH : COLLISION_TILE_PATH;
         m_Map.layers[m_Map.COLLISION_LAYER][tile.ownedRow][tile.ownedCol] = tile.getWalkable() ? 0 : 1;
